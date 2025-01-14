@@ -48,8 +48,11 @@ public class RobotContainer {
     new Trigger(m_exampleSubsystem::exampleCondition)
         .onTrue(new ExampleCommand(m_exampleSubsystem));
 
-    m_driverController.a().whileTrue(m_actionSubsystem.doAction());
+    //m_driverController.a().whileTrue(System.out.println(m_actionSubsystem.validTargetVisible()));
 
+    if (m_driverController.a().getAsBoolean()==true) {
+      System.out.println(m_actionSubsystem.validTargetVisible());
+    }
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
    // m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());

@@ -22,7 +22,6 @@ public class ActionSubsystem extends SubsystemBase {
     // Subsystem::RunOnce implicitly requires `this` subsystem.
     return runOnce(
         () -> {
-          System.out.println(LimelightHelpers.getTV(""));
           /* one-time action goes here */
         });
   }
@@ -32,9 +31,9 @@ public class ActionSubsystem extends SubsystemBase {
    *
    * @return value of some boolean subsystem state, such as a digital sensor.
    */
-  public boolean exampleCondition() {
+  public boolean validTargetVisible() {
     // Query some boolean state, such as a digital sensor.
-    return false;
+    return LimelightHelpers.getTV("");
   }
 
   @Override
