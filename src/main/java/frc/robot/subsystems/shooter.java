@@ -17,21 +17,30 @@ public class shooter extends SubsystemBase{
 
     public shooter() {
         shooter_left = new TalonFX(3);
-        shooter_right = new TalonFX(11);
+        //shooter_right = new TalonFX(11);
 
-        shooter_right.setControl(new Follower(shooter_left.getDeviceID(), true));
+        //shooter_right.setControl(new Follower(shooter_left.getDeviceID(), true));
     }
 
     private void set_vel(Double new_vel) {
         shooter_left.set(new_vel);
+        System.out.println(shooter_left.getVelocity().toString());
     }
 
-    public Command set_motor_speed(DoubleSupplier speed) {
+    public Command set_motor_speed(Double speed) {
         // Inline construction of command goes here.
         // Subsystem::RunOnce implicitly requires `this` subsystem.
         return run(
             () -> {
-                set_vel(speed.getAsDouble());
+                set_vel(speed);
+            });
+    }
+    public Command zero_motor_speed() {
+        // Inline construction of command goes here.
+        // Subsystem::RunOnce implicitly requires `this` subsystem.
+        return run(
+            () -> {
+                set_vel(0d);
             });
     }
 
