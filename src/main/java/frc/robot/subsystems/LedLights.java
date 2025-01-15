@@ -12,7 +12,7 @@ import frc.robot.CANConstants;
 import frc.robot.Constants;
 
 public class LedLights extends SubsystemBase {
-  private CANdle candle = new CANdle(CANConstants.CANDLE_ID, Constants.CANIVORE_BUS_NAME);
+  private CANdle m_candle = new CANdle(CANConstants.CANDLE_ID, Constants.CANIVORE_BUS_NAME);
 
   public LedLights() {}
 
@@ -26,7 +26,7 @@ public class LedLights extends SubsystemBase {
     // Subsystem::RunOnce implicitly requires `this` subsystem.
     return runOnce(
       () -> {
-        candle.setLEDs(r,g,b);
+        m_candle.setLEDs(r,g,b);
       });
   }
 }
