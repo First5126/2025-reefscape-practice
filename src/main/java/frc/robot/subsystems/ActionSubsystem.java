@@ -23,6 +23,7 @@ public class ActionSubsystem extends SubsystemBase {
     return runOnce(
         () -> {
           /* one-time action goes here */
+          System.out.println(hasTarget());
         });
   }
 
@@ -31,7 +32,7 @@ public class ActionSubsystem extends SubsystemBase {
    *
    * @return value of some boolean subsystem state, such as a digital sensor.
    */
-  public boolean validTargetVisible() {
+  public boolean hasTarget() {
     // Query some boolean state, such as a digital sensor.
     return LimelightHelpers.getTV("");
   }
