@@ -25,7 +25,7 @@ public class ActionSubsystem extends SubsystemBase {
         () -> {
           /* one-time action goes here */
           if (hasTarget()) {
-            System.out.println(getNearestData().id);
+            
           }
         });
   }
