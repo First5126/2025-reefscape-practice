@@ -7,10 +7,12 @@ import java.util.function.Supplier;
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
+import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
@@ -21,7 +23,8 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-
+import frc.robot.constats.ControllerConstants;
+import frc.robot.constats.DrivetrainConstants;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
 
 /**
@@ -39,6 +42,12 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private static final Rotation2d kRedAlliancePerspectiveRotation = Rotation2d.k180deg;
     /* Keep track if we've ever applied the operator perspective before or not */
     private boolean m_hasAppliedOperatorPerspective = false;
+
+    private final SwerveRequest.FieldCentric m_drive = new SwerveRequest.FieldCentric()
+      .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric
+    private SlewRateLimiter m_xLimiter = new SlewRateLimiter(2.5);
+	private SlewRateLimiter m_yLimiter = new SlewRateLimiter(2.5);
+	private SlewRateLimiter m_rotationLimiter = new SlewRateLimiter(3);
 
     /* Swerve requests to apply during SysId characterization */
     private final SwerveRequest.SysIdSwerveTranslation m_translationCharacterization = new SwerveRequest.SysIdSwerveTranslation();
@@ -249,5 +258,35 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             updateSimState(deltaTime, RobotController.getBatteryVoltage());
         });
         m_simNotifier.startPeriodic(kSimLoopPeriod);
+    }
+
+    public Command gasPedalCommand(Supplier<Double> throttleSupplier, Supplier<Double> rotationSupplier,
+            Supplier<Double> xSupplier, Supplier<Double> ySupplier) {
+        return run(() -> {
+            double throttle = ControllerConstants.modifyAxisWithCustomDeadband(-throttleSupplier.get(),0.15);
+            double rotation = ControllerConstants.modifyAxisWithCustomDeadband(rotationSupplier.get(),0.15);
+            double x = ControllerConstants.modifyAxis(xSupplier.get());
+            double y = ControllerConstants.modifyAxis(ySupplier.get());
+
+            // making sure the values arent 0
+            if (!(x==0 && y==0)) {
+                double angle = Math.atan2(x, y) + Math.PI / 2;
+                x = Math.cos(angle) * throttle;
+                y = Math.sin(angle) * throttle;
+            }
+            
+            setControl(m_drive
+                    .withVelocityX(-percentOutputToMetersPerSecond(m_xLimiter.calculate(x))).withDeadband(0.05)
+                    .withVelocityY(percentOutputToMetersPerSecond(m_yLimiter.calculate(y))).withDeadband(0.05)
+                    .withRotationalRate(-percentOutputToRadiansPerSecond(m_rotationLimiter.calculate(rotation))));
+        });
+    }
+
+    public double percentOutputToMetersPerSecond(double percentOutput) {
+        return DrivetrainConstants.maxSpeedMetersPerSecond * percentOutput;
+    }
+
+    public double percentOutputToRadiansPerSecond(double percentOutput) {
+        return DrivetrainConstants.maxAngularVelocityRadiansPerSecond * percentOutput;
     }
 }

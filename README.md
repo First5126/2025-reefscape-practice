@@ -1,4 +1,6 @@
 # EMP 5126 ReefScape 2025 Practice Robot
+[![CI](https://github.com/First5126/2025-reefscape-practice/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/First5126/2025-reefscape-practice/actions/workflows/main.yml)
+
 Welcome to the Parkhill South practice robot code for the [2025 ReefScape][1].
 
 # Prerequisites
