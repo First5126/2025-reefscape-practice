@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import java.util.function.Supplier;
+
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -27,20 +29,21 @@ public class ActionSubsystem extends SubsystemBase {
     this.drive = drive;
   }
 
-  public Command doAction() {
+  public Command doAction(Supplier<RawFiducial> fiducialsSupplier) {
     // Inline construction of command goes here.
     // Subsystem::RunOnce implicitly requires `this` subsystem.
     return Commands.run(
-        this::goToTag,drivetrain);
+      () -> {
+          goToTag(fiducialsSupplier);
+      },drivetrain);
   }
 
-  private void goToTag() {
-    RawFiducial[] fiducials = LimelightHelpers.getRawFiducials("limelight-back");
+  private void goToTag(Supplier<RawFiducial> fiducialsSupplier) {
+    RawFiducial fiducial = fiducialsSupplier.get();
+    System.out.println("supplied: "+fiducial);
+    if (fiducial!=null) {
 
-    if (fiducials.length>0) {
-      RawFiducial fiducial = getNearestData(fiducials);
-
-      double rotOffset = getNearestData(fiducials).txnc;
+      double rotOffset = fiducial.txnc;
       double out = lLRotController.calculate(rotOffset, 0);
     
       double xVelocity = 0.0;

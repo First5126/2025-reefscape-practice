@@ -18,7 +18,9 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.ActionSubsystem;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.VisonSubsystem;
 
 public class RobotContainer {
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -28,15 +30,20 @@ public class RobotContainer {
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
             .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
+    private final SwerveRequest.RobotCentric driveRobCentric = new SwerveRequest.RobotCentric()
+            .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
+            .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
     private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
     private final Telemetry logger = new Telemetry(MaxSpeed);
 
-    
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     
     private final CommandXboxController m_driverController = new CommandXboxController(0);
+
+    private final ActionSubsystem m_actionSubsystem = new ActionSubsystem(drivetrain,driveRobCentric);
+    private final VisonSubsystem m_visonSubsystem = new VisonSubsystem();
 
     public RobotContainer() {
         configureBindings();
@@ -53,7 +60,7 @@ public class RobotContainer {
             m_driverController::getLeftX
         ));
 
-        m_driverController.a().whileTrue(drivetrain.applyRequest(() -> brake));
+        m_driverController.a().whileTrue(m_actionSubsystem.doAction(m_visonSubsystem::getCLosestFiducial));
         m_driverController.b().whileTrue(drivetrain.applyRequest(() ->
             point.withModuleDirection(new Rotation2d(-m_driverController.getLeftY(), -m_driverController.getLeftX()))
         ));
