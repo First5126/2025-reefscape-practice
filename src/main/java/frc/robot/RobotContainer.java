@@ -43,6 +43,7 @@ public class RobotContainer {
 
     public RobotContainer() {
         configureBindings();
+        configureCoDriverControls();
     }
 
     private void configureBindings() {
@@ -59,13 +60,7 @@ public class RobotContainer {
         m_driverController.a().whileTrue(m_actionSubsystem.doAction(m_visonSubsystem::getCLosestFiducial));
         m_driverController.b().whileTrue(m_drivetrain.applyRequest(() ->
             point.withModuleDirection(new Rotation2d(-m_driverController.getLeftY(), -m_driverController.getLeftX()))
-        ));
-
-    // Setup driver's controlls
-    m_driver_controller.a().whileTrue(m_drivetrain.applyRequest(() -> brake));
-    m_driver_controller.b().whileTrue(m_drivetrain.applyRequest(() ->
-        point.withModuleDirection(new Rotation2d(-m_driver_controller.getLeftY(), -m_driver_controller.getLeftX()))
-    ));
+     ));
 
     m_drivetrain.setDefaultCommand(
         m_drivetrain.gasPedalCommand(
