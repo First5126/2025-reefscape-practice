@@ -79,21 +79,6 @@ public class ActionSubsystem extends SubsystemBase {
     return returnFiducial;
   }
 
-  public double getRotationToNearestTag() {
-    // the ratio of turning speed to degrees needed to be turned
-    double ratio = 0.035;
-
-    // getting the turning speed
-    double targetingAngularVelocity = LimelightHelpers.getTX("limelight-back") * ratio;
-
-    targetingAngularVelocity*= DrivetrainConstants.maxAngularSpeed;
-    targetingAngularVelocity*= -1;
-    
-    targetingAngularVelocity = Math.toRadians(targetingAngularVelocity);
-
-    return targetingAngularVelocity;
-  }
-
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
