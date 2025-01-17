@@ -6,22 +6,27 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.vision.LimelightHelpers;
+import frc.robot.vision.LimelightHelpers.RawFiducial;
 
-public class ExampleSubsystem extends SubsystemBase {
+public class ActionSubsystem extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
-  public ExampleSubsystem() {}
+  public ActionSubsystem() {}
 
   /**
    * Example command factory method.
    *
    * @return a command
    */
-  public Command exampleMethodCommand() {
+  public Command doAction() {
     // Inline construction of command goes here.
     // Subsystem::RunOnce implicitly requires `this` subsystem.
     return runOnce(
         () -> {
-          
+          /* one-time action goes here */
+          if (hasTarget()) {
+            
+          }
         });
   }
 
@@ -30,9 +35,25 @@ public class ExampleSubsystem extends SubsystemBase {
    *
    * @return value of some boolean subsystem state, such as a digital sensor.
    */
-  public boolean exampleCondition() {
-    // Query some boolean state, such as a digital sensor.
-    return false;
+  public boolean hasTarget() {
+    // Query wether the lime light sees a april tag
+    return LimelightHelpers.getTV("");
+  }
+
+  public RawFiducial getNearestData() {
+    int closest = 999;
+    RawFiducial returnFiducial = null;
+    RawFiducial[] fiducials = LimelightHelpers.getRawFiducials("");
+
+    for (RawFiducial fiducial : fiducials) {
+
+      if (fiducial.distToRobot<closest) {
+        closest = (int) (fiducial.distToCamera);
+        returnFiducial = fiducial;
+      }
+    }
+
+    return returnFiducial;
   }
 
   @Override
