@@ -4,49 +4,72 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.swerve.SwerveRequest;
+
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.constats.DrivetrainConstants;
 import frc.robot.vision.LimelightHelpers;
 import frc.robot.vision.LimelightHelpers.RawFiducial;
 
 public class ActionSubsystem extends SubsystemBase {
-  /** Creates a new ExampleSubsystem. */
-  public ActionSubsystem() {}
+  private CommandSwerveDrivetrain drivetrain;
+  private SwerveRequest.RobotCentric drive;
 
-  /**
-   * Example command factory method.
-   *
-   * @return a command
-   */
+  private PIDController lLRotController = new PIDController(0.1, 0, 0);
+  private PIDController lLDriveController = new PIDController(0.1, 0, 0);
+  private PIDController lLDriveYController = new PIDController(0.1, 0, 0);
+
+  public ActionSubsystem(CommandSwerveDrivetrain drivetrain, SwerveRequest.RobotCentric drive) {
+    this.drivetrain = drivetrain;
+    this.drive = drive;
+  }
+
   public Command doAction() {
     // Inline construction of command goes here.
     // Subsystem::RunOnce implicitly requires `this` subsystem.
-    return runOnce(
-        () -> {
-          /* one-time action goes here */
-          if (hasTarget()) {
-            
-          }
-        });
+    return Commands.run(
+        this::goToTag,drivetrain);
   }
 
-  /**
-   * An example method querying a boolean state of the subsystem (for example, a digital sensor).
-   *
-   * @return value of some boolean subsystem state, such as a digital sensor.
-   */
+  private void goToTag() {
+    RawFiducial[] fiducials = LimelightHelpers.getRawFiducials("limelight-back");
+
+    if (fiducials.length>0) {
+      RawFiducial fiducial = getNearestData(fiducials);
+
+      double rotOffset = getNearestData(fiducials).txnc;
+      double out = lLRotController.calculate(rotOffset, 0);
+    
+      double xVelocity = 0.0;
+      double yVelocity = 0.0;
+      System.out.println("distance: "+fiducial.distToCamera);
+      if (fiducial.distToCamera > 0.65) {
+        xVelocity = -lLDriveController.calculate(fiducial.distToCamera,10);
+        yVelocity = -lLDriveYController.calculate(rotOffset, 0);
+        System.out.println("xvel: "+xVelocity);
+      }
+
+      drivetrain.setControl(drive.withRotationalRate(out).withVelocityX(xVelocity).withVelocityY(yVelocity));
+    }
+    else {
+      drivetrain.setControl(drive.withRotationalRate(0).withVelocityX(0).withVelocityY(0));
+    }
+  }
+
   public boolean hasTarget() {
     // Query wether the lime light sees a april tag
-    return LimelightHelpers.getTV("");
+    return LimelightHelpers.getTV("limelight-back");
   }
 
-  public RawFiducial getNearestData() {
+  public RawFiducial getNearestData(RawFiducial[] fiducials) {
     int closest = 999;
     RawFiducial returnFiducial = null;
-    RawFiducial[] fiducials = LimelightHelpers.getRawFiducials("");
+    
 
     for (RawFiducial fiducial : fiducials) {
-
       if (fiducial.distToRobot<closest) {
         closest = (int) (fiducial.distToCamera);
         returnFiducial = fiducial;
@@ -54,6 +77,21 @@ public class ActionSubsystem extends SubsystemBase {
     }
 
     return returnFiducial;
+  }
+
+  public double getRotationToNearestTag() {
+    // the ratio of turning speed to degrees needed to be turned
+    double ratio = 0.035;
+
+    // getting the turning speed
+    double targetingAngularVelocity = LimelightHelpers.getTX("limelight-back") * ratio;
+
+    targetingAngularVelocity*= DrivetrainConstants.maxAngularSpeed;
+    targetingAngularVelocity*= -1;
+    
+    targetingAngularVelocity = Math.toRadians(targetingAngularVelocity);
+
+    return targetingAngularVelocity;
   }
 
   @Override
