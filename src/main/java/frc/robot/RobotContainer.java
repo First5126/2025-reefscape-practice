@@ -19,9 +19,8 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.ActionSubsystem;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.PathfindingSubsystem;
 
 public class RobotContainer {
   private final CommandSwerveDrivetrain m_drivetrain = TunerConstants.DriveTrain;
@@ -42,9 +41,7 @@ public class RobotContainer {
     
     private final CommandXboxController m_driverController = new CommandXboxController(0);
 
-    private final ActionSubsystem m_actionSubsystem = new ActionSubsystem(m_drivetrain, driveRobCentric);
-    private final VisionSubsystem m_visionSubsystem = new VisionSubsystem();
-
+    private final PathfindingSubsystem m_pathfindingSubsystem = new PathfindingSubsystem();
     public RobotContainer() {
         configureBindings();
         configureCoDriverControls();
