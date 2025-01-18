@@ -50,9 +50,7 @@ public class RobotContainer {
         configureBindings();
         configureCoDriverControls();
 
-        // Another option that allows you to specify the default auto by its name
-        // autoChooser = AutoBuilder.buildAutoChooser("My Default Auto");
-
+        // Adds a auto chooser to Shuffle Board to choose autos
         SmartDashboard.putData("Auto Chooser", autoChooser);
     }
 
