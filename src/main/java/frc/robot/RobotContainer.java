@@ -63,9 +63,6 @@ public class RobotContainer {
             m_driverController::getLeftY,
             m_driverController::getLeftX
         ));
-
-        m_driverController.a().whileTrue(m_actionSubsystem.doAction(m_visionSubsystem::getCLosestFiducial));
-
   }
 
   private void configureCoDriverControls() {
