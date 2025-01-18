@@ -6,7 +6,9 @@ package frc.robot.vision;
 
 import java.util.function.Supplier;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
@@ -30,6 +32,10 @@ public class AprilTagLocalization {
   private double maxFieldDistanceX = 0.0;
   private double maxFieldDistanceY = 0.0;
 
+  private double max_tag_distance = 0.0;
+
+  private VisionConsumer m_VisionConsumer;
+
 
   /**
    * Creates a new AprilTagLocalization.
@@ -41,6 +47,7 @@ public class AprilTagLocalization {
     m_notifier.startPeriodic(0.02); // set up a pose estimation loop with a 0.02 second period.
     m_LimelightDetails = details;
     m_robotPoseSupplier = poseSupplier;
+    m_VisionConsumer = visionConsumer;
   }
 
   /**
@@ -64,19 +71,33 @@ public class AprilTagLocalization {
     }
   }
 
-  public Pose2d poseEstimate() {
-      for (LimelightDetails limelightDetail : m_LimelightDetails) {
-        double yawDegrees = m_robotPoseSupplier.get().getRotation().getDegrees();
-        double yawRateDegreesPerSecond = (yawDegrees-oldyawDegrees)/0.02;
-        LimelightHelpers.SetRobotOrientation(limelightDetail.name, yawDegrees, yawRateDegreesPerSecond,0,0,0,0 );  // Set Orientation using LimelightHelpers.SetRobotOrientation and the m_robotPoseSupplier
-        PoseEstimate poseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(null);  // Get the pose from the Limelight 
-        if (isPoseOnfield(poseEstimate.pose)){
-          return poseEstimate.pose;
-        }
-        // Validates the pose for sanity reject bad poses if fullTrust is true accept regarless of sanity
-        // rejects poses that are more than max tag distance we trust
+  private Matrix<N3, N1> interpolate(Matrix<N3, N1> closeStdDevs, Matrix<N3, N1> farStdDevs, double scale){
+    return VecBuilder.fill(MathUtil.interpolate(closeStdDevs.get(0,0), farStdDevs.get(0,0), scale),
+                    MathUtil.interpolate(closeStdDevs.get(1,0), farStdDevs.get(1,0), scale),
+                    MathUtil.interpolate(closeStdDevs.get(2,0), farStdDevs.get(2,0), scale));
+  }
+
+  public void poseEstimate() {
+    for (LimelightDetails limelightDetail : m_LimelightDetails) {
+      double yawDegrees = m_robotPoseSupplier.get().getRotation().getDegrees();
+      double yawRateDegreesPerSecond = (yawDegrees-oldyawDegrees)/0.02;
+      // Set Orientation using LimelightHelpers.SetRobotOrientation and the m_robotPoseSupplier
+      LimelightHelpers.SetRobotOrientation(limelightDetail.name, yawDegrees, yawRateDegreesPerSecond,0,0,0,0 );  // Set Orientation using LimelightHelpers.SetRobotOrientation and the m_robotPoseSupplier
+      // Get the pose from the Limelight
+      PoseEstimate poseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightDetail.name);  // Get the pose from the Limelight 
+      double scale = poseEstimate.avgTagDist / max_tag_distance;
+      // Validate the pose for sanity reject bad poses  if fullTrust is true accept regarless of sanity
+      if (fullTrust) {
+        // set the pose in the pose consumer
+        m_VisionConsumer.accept(poseEstimate.pose, poseEstimate.timestampSeconds, limelightDetail.closeStdDevs);
+      } else if (isPoseOnfield(poseEstimate.pose) && poseEstimate.avgTagDist < max_tag_distance) { // reject poses that are more than max tag distance we trust
+        // scale std deviation by distance if fullTrust is true set the stdDevs super low.
+        Matrix<N3,N1> interpolated = interpolate(limelightDetail.closeStdDevs, limelightDetail.farStdDevs, scale);
+        // set the pose in the pose consumer
+        m_VisionConsumer.accept(poseEstimate.pose, poseEstimate.timestampSeconds, interpolated);
       }
-      return null; // return null if no valid pose is found
+      oldyawDegrees = yawDegrees;
+    }
   }
   
   @FunctionalInterface
