@@ -19,7 +19,9 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.ActionSubsystem;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.VisionSubsystem;
 
 public class RobotContainer {
   private final CommandSwerveDrivetrain m_drivetrain = TunerConstants.DriveTrain;
@@ -31,7 +33,6 @@ public class RobotContainer {
             .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
     private final SwerveRequest.RobotCentric driveRobCentric = new SwerveRequest.RobotCentric()
-            .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
     private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
@@ -40,6 +41,9 @@ public class RobotContainer {
     private final SendableChooser<Command> autoChooser = AutoBuilder.buildAutoChooser();
     
     private final CommandXboxController m_driverController = new CommandXboxController(0);
+
+    private final ActionSubsystem m_actionSubsystem = new ActionSubsystem(m_drivetrain, driveRobCentric);
+    private final VisionSubsystem m_visionSubsystem = new VisionSubsystem();
 
     public RobotContainer() {
         configureBindings();
@@ -60,14 +64,8 @@ public class RobotContainer {
             m_driverController::getLeftX
         ));
 
-    m_drivetrain.setDefaultCommand(
-        m_drivetrain.gasPedalCommand(
-            m_driver_controller::getRightTriggerAxis,
-            m_driver_controller::getRightX,
-            m_driver_controller::getLeftY,
-            m_driver_controller::getLeftX
-        )
-    );
+        m_driverController.a().whileTrue(m_actionSubsystem.doAction(m_visionSubsystem::getCLosestFiducial));
+
   }
 
   private void configureCoDriverControls() {
