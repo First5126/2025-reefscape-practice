@@ -40,7 +40,6 @@ public class VisonSubsystem extends SubsystemBase {
       RawFiducial closestFiducial = null;
 
       for (RawFiducial fiducial : fiduals){
-        System.out.println(fiducial.distToCamera);
         if (closest > fiducial.distToCamera) {
           closest = fiducial.distToCamera;
           closestFiducial = fiducial;

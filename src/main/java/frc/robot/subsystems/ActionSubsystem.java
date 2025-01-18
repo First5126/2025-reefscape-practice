@@ -20,7 +20,7 @@ public class ActionSubsystem extends SubsystemBase {
   private CommandSwerveDrivetrain drivetrain;
   private SwerveRequest.RobotCentric drive;
 
-  private PIDController lLRotController = new PIDController(0.1, 0, 0);
+  private PIDController lLRotController = new PIDController(0.05, 0, 0);
   private PIDController lLDriveController = new PIDController(0.1, 0, 0);
   private PIDController lLDriveYController = new PIDController(0.1, 0, 0);
 
@@ -40,22 +40,29 @@ public class ActionSubsystem extends SubsystemBase {
 
   private void goToTag(Supplier<RawFiducial> fiducialsSupplier) {
     RawFiducial fiducial = fiducialsSupplier.get();
-    System.out.println("supplied: "+fiducial);
+    System.out.println("supplied: "+(fiducial!=null));
     if (fiducial!=null) {
 
       double rotOffset = fiducial.txnc;
-      double out = lLRotController.calculate(rotOffset, 0);
+      double out = 0;
     
       double xVelocity = 0.0;
       double yVelocity = 0.0;
       System.out.println("distance: "+fiducial.distToCamera);
-      if (fiducial.distToCamera > 0.65) {
-        xVelocity = -lLDriveController.calculate(fiducial.distToCamera,10);
-        yVelocity = -lLDriveYController.calculate(rotOffset, 0);
-        System.out.println("xvel: "+xVelocity);
-      }
+      System.out.println("rotation: "+rotOffset);
 
-      drivetrain.setControl(drive.withRotationalRate(out).withVelocityX(xVelocity).withVelocityY(yVelocity));
+      if (fiducial.distToCamera > 0.65) {
+        out = lLRotController.calculate(rotOffset);
+        xVelocity = -lLDriveController.calculate(fiducial.distToCamera, 6);
+        yVelocity = -lLDriveYController.calculate(rotOffset, 0);
+
+        System.out.println("xvel: "+xVelocity);
+
+        drivetrain.setControl(drive.withRotationalRate(out).withVelocityX(xVelocity).withVelocityY(yVelocity));
+      }
+      else{
+        drivetrain.setControl(drive.withRotationalRate(0).withVelocityX(0).withVelocityY(0));
+      }
     }
     else {
       drivetrain.setControl(drive.withRotationalRate(0).withVelocityX(0).withVelocityY(0));
