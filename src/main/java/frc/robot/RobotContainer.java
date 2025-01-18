@@ -22,10 +22,11 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.shooter;
 
 public class RobotContainer {
+    /*
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
-    /* Setting up bindings for necessary control of the swerve drive platform*/
+    // Setting up bindings for necessary control of the swerve drive platform
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
             .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
@@ -36,7 +37,7 @@ public class RobotContainer {
 
     
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
-    
+    */
     private final CommandXboxController m_driverController = new CommandXboxController(0);
     private final shooter m_shooter = new shooter(); 
 
@@ -44,7 +45,7 @@ public class RobotContainer {
         configureBindings();
     }
 
-    private void configureBindings() {
+    private void configureBindings() {/*
         // Note that X is defined as forward according to WPILib convention,
         // and Y is defined as to the left according to WPILib convention.
         drivetrain.setDefaultCommand(
@@ -59,7 +60,7 @@ public class RobotContainer {
         m_driverController.a().whileTrue(drivetrain.applyRequest(() -> brake));
         m_driverController.b().whileTrue(drivetrain.applyRequest(() ->
             point.withModuleDirection(new Rotation2d(-m_driverController.getLeftY(), -m_driverController.getLeftX()))
-        ));
+        ));*/
 
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
@@ -73,7 +74,10 @@ public class RobotContainer {
         // reset the field-centric heading on left bumper press
         m_driverController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
         */
-        drivetrain.registerTelemetry(logger::telemeterize);
+        //drivetrain.registerTelemetry(logger::telemeterize);
+
+        m_driverController.a().whileTrue(m_shooter.set_motor_speed(m_shooter::get_speed));
+        m_driverController.b().onTrue(m_shooter.zero_motor_speed());
     }
 
     public Command getAutonomousCommand() {

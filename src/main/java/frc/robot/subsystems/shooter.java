@@ -3,11 +3,13 @@ package frc.robot.subsystems;
 import java.util.DoubleSummaryStatistics;
 import java.util.Set;
 import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -27,21 +29,25 @@ public class shooter extends SubsystemBase{
         System.out.println(shooter_left.getVelocity().toString());
     }
 
-    public Command set_motor_speed(Double speed) {
+    public Command set_motor_speed(DoubleSupplier speed) {
         // Inline construction of command goes here.
         // Subsystem::RunOnce implicitly requires `this` subsystem.
-        return run(
+        return runOnce(
             () -> {
-                set_vel(speed);
+                set_vel(speed.getAsDouble());
             });
     }
     public Command zero_motor_speed() {
         // Inline construction of command goes here.
         // Subsystem::RunOnce implicitly requires `this` subsystem.
-        return run(
+        return runOnce(
             () -> {
                 set_vel(0d);
             });
+    }
+
+    public Double get_speed() {
+        return SmartDashboard.getNumber("Prototype speed", 0);
     }
 
     /**
