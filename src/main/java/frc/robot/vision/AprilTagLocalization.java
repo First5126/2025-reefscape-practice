@@ -77,7 +77,7 @@ public class AprilTagLocalization {
     return observation.getX() < 0.0 // What X position robot is on the field.
         || observation.getY() < 0.0 // What Y position robot is on the field.
         || observation.getX() > FIELD_LAYOUT.getFieldLength()// Whether the robot X position is on the field or not
-        || observation.getY() > FIELD_LAYOUT.getFieldWidth() // Whether the robot X position is on the field or not
+        || observation.getY() > FIELD_LAYOUT.getFieldWidth(); // Whether the robot X position is on the field or not
   }
 
   /**
