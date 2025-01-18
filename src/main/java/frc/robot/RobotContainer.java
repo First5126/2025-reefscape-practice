@@ -19,9 +19,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.ActionSubsystem;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.VisonSubsystem;
 
 public class RobotContainer {
   private final CommandSwerveDrivetrain m_drivetrain = TunerConstants.DriveTrain;
@@ -43,9 +41,6 @@ public class RobotContainer {
     
     private final CommandXboxController m_driverController = new CommandXboxController(0);
 
-    private final ActionSubsystem m_actionSubsystem = new ActionSubsystem(m_drivetrain,driveRobCentric);
-    private final VisonSubsystem m_visonSubsystem = new VisonSubsystem();
-
     public RobotContainer() {
         configureBindings();
         configureCoDriverControls();
@@ -64,11 +59,6 @@ public class RobotContainer {
             m_driverController::getLeftY,
             m_driverController::getLeftX
         ));
-
-        m_driverController.a().whileTrue(m_actionSubsystem.doAction(m_visonSubsystem::getCLosestFiducial));
-        m_driverController.b().whileTrue(m_drivetrain.applyRequest(() ->
-            point.withModuleDirection(new Rotation2d(-m_driverController.getLeftY(), -m_driverController.getLeftX()))
-     ));
 
     m_drivetrain.setDefaultCommand(
         m_drivetrain.gasPedalCommand(
