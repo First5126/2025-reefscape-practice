@@ -4,15 +4,25 @@
 
 package frc.robot.vision;
 
-import java.util.function.Supplier;
 
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.DegreesPerSecond;
+import static edu.wpi.first.units.Units.Meters;
+import java.util.function.Supplier;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.MutAngle;
 import edu.wpi.first.wpilibj.Notifier;
+import static frc.robot.vision.AprilTagLocalizationConstants.MAX_TAG_DISTANCE;
+import static frc.robot.vision.AprilTagLocalizationConstants.LOCALIZATION_PERIOD;
 import frc.robot.vision.AprilTagLocalizationConstants.LimelightDetails;
 import frc.robot.vision.LimelightHelpers.PoseEstimate;
+
 
 
 /**
@@ -23,8 +33,11 @@ public class AprilTagLocalization {
   private Notifier m_notifier = new Notifier(this::poseEstimate);  //calls pose estimate on the the period
   private LimelightDetails[] m_LimelightDetails;  // list of limelights that can provide updates
   private Supplier<Pose2d> m_robotPoseSupplier;  // supplies the pose of the robot
-  private boolean fullTrust;  //to allow for button trust the tag estimate over all else.
-  private double oldyawDegrees = 0;
+  public boolean m_fullTrust;  //to allow for button trust the tag estimate over all else.
+  public double oldyawDegrees = 0;
+  private MutAngle m_yaw = Degrees.mutable(0); ;
+  public MutAngle M_OldYaw = Degrees.mutable(0);  // the previous yaw 
+  private VisionConsumer m_VisionConsumer;
  
   
   private double maxFieldDistanceX = 0.0;
@@ -45,10 +58,9 @@ public class AprilTagLocalization {
 
   /**
    * Sets the full trust of the vision system.  The robot will trust the vision system over all other sensors.
-   * @param fullTrust
    */
   public void setFullTrust(boolean fullTrust) {
-    this.fullTrust = fullTrust;
+    this.m_fullTrust = fullTrust;
   }
   private boolean isPoseOnfield(Pose2d observation) { 
     // Coordinates for where Pose is on the field
@@ -63,20 +75,46 @@ public class AprilTagLocalization {
       return false;
     }
   }
+  /**
+   * Interpolates between two std deviations.
+   * @param closeStdDevs
+   * @param farStdDevs
+   * @param scale
+   * @return
+   */
+  public Matrix<N3, N1> interpolate(Matrix<N3, N1> closeStdDevs, Matrix<N3, N1> farStdDevs, double scale){
+    return VecBuilder.fill(MathUtil.interpolate(closeStdDevs.get(0,0), farStdDevs.get(0,0), scale),
+                    MathUtil.interpolate(closeStdDevs.get(1,0), farStdDevs.get(1,0), scale),
+                    MathUtil.interpolate(closeStdDevs.get(2,0), farStdDevs.get(2,0), scale));
+  }
 
-  public Pose2d poseEstimate() {
-      for (LimelightDetails limelightDetail : m_LimelightDetails) {
-        double yawDegrees = m_robotPoseSupplier.get().getRotation().getDegrees();
-        double yawRateDegreesPerSecond = (yawDegrees-oldyawDegrees)/0.02;
-        LimelightHelpers.SetRobotOrientation(limelightDetail.name, yawDegrees, yawRateDegreesPerSecond,0,0,0,0 );  // Set Orientation using LimelightHelpers.SetRobotOrientation and the m_robotPoseSupplier
-        PoseEstimate poseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(null);  // Get the pose from the Limelight 
-        if (isPoseOnfield(poseEstimate.pose)){
-          return poseEstimate.pose;
-        }
-        // Validates the pose for sanity reject bad poses if fullTrust is true accept regarless of sanity
-        // rejects poses that are more than max tag distance we trust
+
+
+   /**
+   * Estimates the pose of the robot using the limelight.
+   * This function will run in a background thread once per AprilTagLocalizationConstants.LOCALIZATION_PERIOD.
+   */
+  public void poseEstimate() {
+    for (LimelightDetails limelightDetail : m_LimelightDetails) {
+      m_yaw.mut_replace(Degrees.of(m_robotPoseSupplier.get().getRotation().getDegrees()));
+      // Yaw Rate is calculated by the difference between the current yaw and the old yaw divided by the localization period
+      AngularVelocity yawRate = (m_yaw.minus(M_OldYaw).div(LOCALIZATION_PERIOD));
+      // Orientation is set from LimelightHelpers
+      LimelightHelpers.SetRobotOrientation(limelightDetail.name, m_yaw.in(Degrees), yawRate.in(DegreesPerSecond),0,0,0,0 );  // Set Orientation using LimelightHelpers.SetRobotOrientation and the m_robotPoseSupplier
+      // Pose Estimate from LimelightHelpers
+      PoseEstimate poseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightDetail.name);  // Retrieving the current pose estimation from the Limelight using the specified Limelight detail
+      double scale = poseEstimate.avgTagDist / MAX_TAG_DISTANCE.in(Meters); // Dividing the average tag distance by the max tag distance
+      // If Else statement to determine if the pose is on the field and if the pose is within the max tag distance
+      if (m_fullTrust) { // Full Trust is when the robot trusts the vision system over all other sensors
+        m_VisionConsumer.accept(poseEstimate.pose, poseEstimate.timestampSeconds, limelightDetail.closeStdDevs);
+      } else if (isPoseOnfield(poseEstimate.pose) && poseEstimate.avgTagDist < MAX_TAG_DISTANCE.in(Meters)) { // rejects poses that are more than max tag distance we trust
+        // If the Pose on the field is less than the max tag distance, then the poses are rejected
+        Matrix<N3,N1> interpolated = interpolate(limelightDetail.closeStdDevs, limelightDetail.farStdDevs, scale);
+        // Pose is set to the vision consumer
+        m_VisionConsumer.accept(poseEstimate.pose, poseEstimate.timestampSeconds, interpolated);
       }
-      return null; // return null if no valid pose is found
+      M_OldYaw.mut_replace(m_yaw);
+    }
   }
   
   @FunctionalInterface
