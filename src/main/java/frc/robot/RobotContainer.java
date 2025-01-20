@@ -11,6 +11,7 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -20,7 +21,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.PathfindingSubsystem;
 import frc.robot.vision.AprilTagLocalization;
 import frc.robot.vision.AprilTagLocalizationConstants;
 
@@ -40,7 +40,6 @@ public class RobotContainer {
     private final CommandXboxController m_driverController = new CommandXboxController(0);
     private final CommandXboxController m_codriver_controller = new CommandXboxController(1);
 
-    private final PathfindingSubsystem m_pathfindingSubsystem = new PathfindingSubsystem();
     private final SendableChooser<Command> autoChooser = AutoBuilder.buildAutoChooser(); 
     private AprilTagLocalization m_aprilTagLocalization = new AprilTagLocalization(
       m_drivetrain::getPose2d,
@@ -66,6 +65,8 @@ public class RobotContainer {
             m_driverController::getLeftY,
             m_driverController::getLeftX
         ));
+
+        m_driverController.a().whileTrue(m_drivetrain.goToPose(new Pose2d(0,0,Rotation2d.fromDegrees(0))));
   }
 
   private void configureCoDriverControls() {
