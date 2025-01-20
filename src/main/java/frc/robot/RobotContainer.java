@@ -56,17 +56,18 @@ public class RobotContainer {
     }
 
     private void configureBindings() {
-        // Note that X is defined as forward according to WPILib convention,
-        // and Y is defined as to the left according to WPILib convention.
-        
-        m_drivetrain.setDefaultCommand(m_drivetrain.gasPedalCommand(
-            m_driverController::getRightTriggerAxis,
-            m_driverController::getRightX,
-            m_driverController::getLeftY,
-            m_driverController::getLeftX
-        ));
+      // Note that X is defined as forward according to WPILib convention,
+      // and Y is defined as to the left according to WPILib convention.
+      
+      m_drivetrain.setDefaultCommand(m_drivetrain.gasPedalCommand(
+          m_driverController::getRightTriggerAxis,
+          m_driverController::getRightX,
+          m_driverController::getLeftY,
+          m_driverController::getLeftX
+      ));
 
-        m_driverController.a().whileTrue(m_drivetrain.goToPose(new Pose2d(0,0,Rotation2d.fromDegrees(0))));
+      m_driverController.rightBumper().onTrue(m_drivetrain.zero_pidgeon());
+      m_driverController.a().whileTrue(m_drivetrain.goToPose(new Pose2d(0,0,Rotation2d.fromDegrees(0))));
   }
 
   private void configureCoDriverControls() {

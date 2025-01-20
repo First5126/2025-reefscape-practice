@@ -4,6 +4,8 @@ import static edu.wpi.first.units.Units.*;
 
 import java.util.function.Supplier;
 
+import javax.sound.sampled.ReverbType;
+
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
@@ -381,6 +383,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         return DrivetrainConstants.maxAngularVelocityRadiansPerSecond * percentOutput;
     }
 
+    public Command zero_pidgeon(){
+        return runOnce(this::seedFieldCentric);
+    }
     public Command goToPose(Pose2d pose) {
         return AutoBuilder.pathfindToPose(pose, DrivetrainConstants.pathConstraints);
     }
