@@ -34,7 +34,7 @@ public class AprilTagLocalizationConstants {
     }
   }
 
-  public static final String LIMELIGHT_NAME = "limelight";
+  public static final String LIMELIGHT_NAME = "limelight-back";
   public static final Matrix<N3, N1> LIMELIGHT_CLOSE_STDDEV =  VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(0));
   public static final Matrix<N3, N1> LIMELIGHT_FAR_STDDEV =  VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(0));
   public static final LimelightDetails LIMELIGHT_DETAILS = new LimelightDetails(LIMELIGHT_NAME, LIMELIGHT_CLOSE_STDDEV, LIMELIGHT_CLOSE_STDDEV);

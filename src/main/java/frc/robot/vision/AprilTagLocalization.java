@@ -24,6 +24,9 @@ import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.MutAngle;
 import edu.wpi.first.units.measure.Per;
 import edu.wpi.first.wpilibj.Notifier;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
 import static frc.robot.vision.AprilTagLocalizationConstants.LimelightDetails;
 import static frc.robot.vision.AprilTagLocalizationConstants.FIELD_LAYOUT;
 import static frc.robot.vision.AprilTagLocalizationConstants.MAX_TAG_DISTANCE;
@@ -36,8 +39,7 @@ import frc.robot.vision.LimelightHelpers.PoseEstimate;
  * A class that uses the limelight to localize the robot using AprilTags.
  * it runs in a background thread instead of the main robot loop.
  */
-public class AprilTagLocalization {
-  private Notifier m_notifier = new Notifier(this::poseEstimate);  //calls pose estimate on the the period
+public class AprilTagLocalization extends SubsystemBase{
   private LimelightDetails[] m_LimelightDetails;  // list of limelights that can provide updates
   private Supplier<Pose2d> m_robotPoseSupplier;  // supplies the pose of the robot
   private boolean m_FullTrust;  //to allow for button trust the tag estimate over all else.
@@ -53,10 +55,9 @@ public class AprilTagLocalization {
    * @param details // the details of the limelight, more than one can be passed to allow for multipe on the bot.
    */
   public AprilTagLocalization(Supplier<Pose2d> poseSupplier, VisionConsumer visionConsumer,  LimelightDetails ... details) {
-    m_notifier.startPeriodic(LOCALIZATION_PERIOD.in(Seconds)); // set up a pose estimation loop with a 0.02 second period.
     m_LimelightDetails = details;
     m_robotPoseSupplier = poseSupplier;
-    m_VisionConsumer = visionConsumer;
+    m_VisionConsumer = visionConsumer; 
   }
 
   /**
@@ -97,7 +98,8 @@ public class AprilTagLocalization {
    * Estimates the pose of the robot using the limelight.
    * This function will run in a background thread once per AprilTagLocalizationConstants.LOCALIZATION_PERIOD.
    */
-  public void poseEstimate() {
+  @Override
+  public void periodic() {
     for (LimelightDetails limelightDetail : m_LimelightDetails) {
       m_yaw.mut_replace(Degrees.of(m_robotPoseSupplier.get().getRotation().getDegrees()));
       AngularVelocity yawRate = (m_yaw.minus(m_OldYaw).div(LOCALIZATION_PERIOD));
@@ -105,18 +107,24 @@ public class AprilTagLocalization {
       LimelightHelpers.SetRobotOrientation(limelightDetail.name, m_yaw.in(Degrees), yawRate.in(DegreesPerSecond),0,0,0,0 );  // Set Orientation using LimelightHelpers.SetRobotOrientation and the m_robotPoseSupplier
       // Get the pose from the Limelight
       PoseEstimate poseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightDetail.name);  // Get the pose from the Limelight 
-      double scale = poseEstimate.avgTagDist / MAX_TAG_DISTANCE.in(Meters); // scale the std deviation by the distance
-      // Validate the pose for sanity reject bad poses  if fullTrust is true accept regarless of sanity
-      if (m_FullTrust) {
-        // set the pose in the pose consumer
-        m_VisionConsumer.accept(poseEstimate.pose, poseEstimate.timestampSeconds, limelightDetail.closeStdDevs);
-      } else if (isPoseOnfield(poseEstimate.pose) && poseEstimate.avgTagDist < MAX_TAG_DISTANCE.in(Meters)) { // reject poses that are more than max tag distance we trust
-        // scale std deviation by distance if fullTrust is true set the stdDevs super low.
-        Matrix<N3,N1> interpolated = interpolate(limelightDetail.closeStdDevs, limelightDetail.farStdDevs, scale);
-        // set the pose in the pose consumer
-        m_VisionConsumer.accept(poseEstimate.pose, poseEstimate.timestampSeconds, interpolated);
+      if (poseEstimate != null) {
+        System.out.println("Pose X: " + poseEstimate.pose.getX());
+        System.out.println("Pose Y: " + poseEstimate.pose.getY());
+        SmartDashboard.putNumber("Pose X", poseEstimate.pose.getX());
+        SmartDashboard.putNumber("Pose Y", poseEstimate.pose.getY());
+        double scale = poseEstimate.avgTagDist / MAX_TAG_DISTANCE.in(Meters); // scale the std deviation by the distance
+        // Validate the pose for sanity reject bad poses  if fullTrust is true accept regarless of sanity
+        if (m_FullTrust) {
+          // set the pose in the pose consumer
+          m_VisionConsumer.accept(poseEstimate.pose, poseEstimate.timestampSeconds, limelightDetail.closeStdDevs);
+        } else if (isPoseOnfield(poseEstimate.pose) && poseEstimate.avgTagDist < MAX_TAG_DISTANCE.in(Meters)) { // reject poses that are more than max tag distance we trust
+          // scale std deviation by distance if fullTrust is true set the stdDevs super low.
+          Matrix<N3,N1> interpolated = interpolate(limelightDetail.closeStdDevs, limelightDetail.farStdDevs, scale);
+          // set the pose in the pose consumer
+          m_VisionConsumer.accept(poseEstimate.pose, poseEstimate.timestampSeconds, interpolated);
+        }
+        m_OldYaw.mut_replace(m_yaw);
       }
-      m_OldYaw.mut_replace( m_yaw);
     }
   }
   
