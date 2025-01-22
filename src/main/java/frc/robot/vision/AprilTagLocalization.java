@@ -59,7 +59,7 @@ public class AprilTagLocalization {
    * @param visionConsumer // a consumer that accepts the vision pose, timestamp, and std deviations
    * @param details // the details of the limelight, more than one can be passed to allow for multipe on the bot.
    */
-  public AprilTagLocalization(Supplier<Pose2d> poseSupplier, VisionConsumer visionConsumer, ResetPose resetPose,  LimelightDetails ... details) {
+  public AprilTagLocalization(Supplier<Pose2d> poseSupplier, ResetPose resetPose, VisionConsumer visionConsumer,  LimelightDetails ... details) {
     m_notifier.startPeriodic(LOCALIZATION_PERIOD.in(Seconds)); // set up a pose estimation loop with a 0.02 second period.
     m_LimelightDetails = details;
     m_robotPoseSupplier = poseSupplier;
