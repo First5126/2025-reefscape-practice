@@ -43,6 +43,7 @@ public class RobotContainer {
     private final CommandXboxController m_driverController = new CommandXboxController(0);
     private AprilTagLocalization m_aprilTagLocalization = new AprilTagLocalization(
       m_drivetrain::getPose2d,
+      m_drivetrain::resetPose,
       m_drivetrain::addVisionMeasurement,
       AprilTagLocalizationConstants.LIMELIGHT_DETAILS
     );

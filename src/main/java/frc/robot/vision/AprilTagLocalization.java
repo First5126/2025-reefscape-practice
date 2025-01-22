@@ -16,6 +16,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.units.measure.Angle;
@@ -23,7 +24,13 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.MutAngle;
 import edu.wpi.first.units.measure.Per;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
 import static frc.robot.vision.AprilTagLocalizationConstants.LimelightDetails;
 import static frc.robot.vision.AprilTagLocalizationConstants.FIELD_LAYOUT;
 import static frc.robot.vision.AprilTagLocalizationConstants.MAX_TAG_DISTANCE;
@@ -44,7 +51,7 @@ public class AprilTagLocalization {
   private MutAngle m_yaw = Degrees.mutable(0); ;
   private MutAngle m_OldYaw = Degrees.mutable(0);  // the previous yaw 
   private VisionConsumer m_VisionConsumer;
-
+  private ResetPose m_poseReset;
 
   /**
    * Creates a new AprilTagLocalization.
@@ -52,10 +59,11 @@ public class AprilTagLocalization {
    * @param visionConsumer // a consumer that accepts the vision pose, timestamp, and std deviations
    * @param details // the details of the limelight, more than one can be passed to allow for multipe on the bot.
    */
-  public AprilTagLocalization(Supplier<Pose2d> poseSupplier, VisionConsumer visionConsumer,  LimelightDetails ... details) {
+  public AprilTagLocalization(Supplier<Pose2d> poseSupplier, VisionConsumer visionConsumer, ResetPose resetPose,  LimelightDetails ... details) {
     m_notifier.startPeriodic(LOCALIZATION_PERIOD.in(Seconds)); // set up a pose estimation loop with a 0.02 second period.
     m_LimelightDetails = details;
     m_robotPoseSupplier = poseSupplier;
+    m_poseReset = resetPose;
     m_VisionConsumer = visionConsumer;
   }
 
@@ -72,7 +80,7 @@ public class AprilTagLocalization {
    * @param observation
    * @return
    */
-  private boolean isPoseOnfield(Pose2d observation) { 
+  private boolean isPoseOfffield(Pose2d observation) { 
     // Coordinates for where Pose is on the field
     return observation.getX() < 0.0 // What X position robot is on the field.
         || observation.getY() < 0.0 // What Y position robot is on the field.
@@ -105,18 +113,32 @@ public class AprilTagLocalization {
       LimelightHelpers.SetRobotOrientation(limelightDetail.name, m_yaw.in(Degrees), yawRate.in(DegreesPerSecond),0,0,0,0 );  // Set Orientation using LimelightHelpers.SetRobotOrientation and the m_robotPoseSupplier
       // Get the pose from the Limelight
       PoseEstimate poseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightDetail.name);  // Get the pose from the Limelight 
-      double scale = poseEstimate.avgTagDist / MAX_TAG_DISTANCE.in(Meters); // scale the std deviation by the distance
-      // Validate the pose for sanity reject bad poses  if fullTrust is true accept regarless of sanity
-      if (m_FullTrust) {
-        // set the pose in the pose consumer
-        m_VisionConsumer.accept(poseEstimate.pose, poseEstimate.timestampSeconds, limelightDetail.closeStdDevs);
-      } else if (isPoseOnfield(poseEstimate.pose) && poseEstimate.avgTagDist < MAX_TAG_DISTANCE.in(Meters)) { // reject poses that are more than max tag distance we trust
-        // scale std deviation by distance if fullTrust is true set the stdDevs super low.
-        Matrix<N3,N1> interpolated = interpolate(limelightDetail.closeStdDevs, limelightDetail.farStdDevs, scale);
-        // set the pose in the pose consumer
-        m_VisionConsumer.accept(poseEstimate.pose, poseEstimate.timestampSeconds, interpolated);
-      }
-      m_OldYaw.mut_replace( m_yaw);
+      if (poseEstimate != null && poseEstimate.pose.getX()!=0.0 && poseEstimate.pose.getY()!=0.0) {
+        double scale = poseEstimate.avgTagDist / MAX_TAG_DISTANCE.in(Meters); // scale the std deviation by the distance
+        // Validate the pose for sanity reject bad poses  if fullTrust is true accept regarless of sanity
+
+        if (m_FullTrust) {
+          // set the pose in the pose consumer
+          m_poseReset.accept(new Pose2d(poseEstimate.pose.getX(),poseEstimate.pose.getY(),Rotation2d.fromDegrees(m_yaw.in(Degrees))));
+        } else if (!(isPoseOfffield(poseEstimate.pose)) && poseEstimate.avgTagDist < MAX_TAG_DISTANCE.in(Meters)) { // reject poses that are more than max tag distance we trust
+          // scale std deviation by distance if fullTrust is true set the stdDevs super low.
+          Matrix<N3,N1> interpolated = interpolate(limelightDetail.closeStdDevs, limelightDetail.farStdDevs, scale);
+          System.out.println("stddev x: "+interpolated.get(0, 0));
+          System.out.println("stddev y: "+interpolated.get(1, 0));
+          System.out.println("std dev rotation: "+interpolated.get(2, 0));
+          // set the pose in the pose consumer
+          System.out.println("FPGA:" + Timer.getFPGATimestamp() + " pose timestamp:" + poseEstimate.timestampSeconds);
+          m_VisionConsumer.accept(poseEstimate.pose, poseEstimate.timestampSeconds, interpolated);
+          /* */
+          System.out.println("pose X: "+poseEstimate.pose.getX());
+          System.out.println("pose Y: "+poseEstimate.pose.getY());
+
+          System.out.println("drivetrain X: "+ m_robotPoseSupplier.get().getX());
+          System.out.println("drivetrain Y: "+m_robotPoseSupplier.get().getY());
+          //m_poseReset.accept(new Pose2d(poseEstimate.pose.getX(),poseEstimate.pose.getY(),Rotation2d.fromDegrees(m_yaw.in(Degrees))));
+        }
+        m_OldYaw.mut_replace(m_yaw);
+      } 
     }
   }
   
@@ -130,5 +152,12 @@ public class AprilTagLocalization {
       Pose2d visionRobotPoseMeters,
       double timestampSeconds,
       Matrix<N3, N1> visionMeasurementStdDevs);
+  }
+
+  @FunctionalInterface
+  public interface ResetPose {
+    void accept( 
+      Pose2d pose2d
+    );    
   }
 }
