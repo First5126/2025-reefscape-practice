@@ -43,8 +43,8 @@ public class RobotContainer {
   private final SendableChooser<Command> autoChooser = AutoBuilder.buildAutoChooser(); 
   private AprilTagLocalization m_aprilTagLocalization = new AprilTagLocalization(
     m_drivetrain::getPose2d,
-    m_drivetrain::addVisionMeasurement,
     m_drivetrain::resetPose,
+    m_drivetrain::addVisionMeasurement,
     AprilTagLocalizationConstants.LIMELIGHT_DETAILS
   );
 
