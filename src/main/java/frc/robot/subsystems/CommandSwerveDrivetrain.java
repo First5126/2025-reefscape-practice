@@ -4,6 +4,8 @@ import static edu.wpi.first.units.Units.*;
 
 import java.util.function.Supplier;
 
+import javax.sound.sampled.ReverbType;
+
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
@@ -334,6 +336,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 m_hasAppliedOperatorPerspective = true;
             });
         }
+        System.out.println("drivetrain pose X: " + getPose2d().getX());
+        System.out.println("drivetrain pose Y: " + getPose2d().getY());
     }
 
     private void startSimThread() {
@@ -379,5 +383,12 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     public double percentOutputToRadiansPerSecond(double percentOutput) {
         return DrivetrainConstants.maxAngularVelocityRadiansPerSecond * percentOutput;
+    }
+
+    public Command zero_pidgeon(){
+        return runOnce(this::seedFieldCentric);
+    }
+    public Command goToPose(Pose2d pose) {
+        return AutoBuilder.pathfindToPose(pose, DrivetrainConstants.pathConstraints);
     }
 }
