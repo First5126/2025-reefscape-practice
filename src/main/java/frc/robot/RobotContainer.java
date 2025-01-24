@@ -40,6 +40,8 @@ public class RobotContainer {
   private final CommandXboxController m_driverController = new CommandXboxController(0);
   private final CommandXboxController m_codriver_controller = new CommandXboxController(1);
 
+  private final Telemetry logger = new Telemetry(MaxSpeed);
+
   private final SendableChooser<Command> autoChooser = AutoBuilder.buildAutoChooser(); 
   private AprilTagLocalization m_aprilTagLocalization = new AprilTagLocalization(
     m_drivetrain::getPose2d,
@@ -69,9 +71,11 @@ public class RobotContainer {
 
     m_driverController.rightBumper().onTrue(m_drivetrain.zero_pidgeon());
     m_driverController.a().whileTrue(m_drivetrain.goToPose(new Pose2d(0,0,Rotation2d.fromDegrees(0))));
-    m_driverController.b().whileTrue(m_drivetrain.goToPose(new Pose2d(7.573, 7.000, Rotation2d.fromDegrees(180))));
+    m_driverController.b().whileTrue(m_drivetrain.goToPose(new Pose2d(7.2, 6.200, Rotation2d.fromDegrees(0))));
     m_driverController.y().whileTrue(m_aprilTagLocalization.setTrust(true));
     m_driverController.y().onFalse(m_aprilTagLocalization.setTrust(false));
+
+    m_drivetrain.registerTelemetry(logger::telemeterize);
   }
 
   private void configureCoDriverControls() {

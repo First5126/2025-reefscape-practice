@@ -131,11 +131,11 @@ public class AprilTagLocalization {
         } else if (!(isPoseOfffield(poseEstimate.pose)) && poseEstimate.avgTagDist < MAX_TAG_DISTANCE.in(Meters)) { // reject poses that are more than max tag distance we trust
           // scale std deviation by distance if fullTrust is true set the stdDevs super low.
           Matrix<N3,N1> interpolated = interpolate(limelightDetail.closeStdDevs, limelightDetail.farStdDevs, scale);
-          System.out.println("stddev x: "+interpolated.get(0, 0));
-          System.out.println("stddev y: "+interpolated.get(1, 0));
-          System.out.println("std dev rotation: "+interpolated.get(2, 0));
+          //System.out.println("stddev x: "+interpolated.get(0, 0));
+          //System.out.println("stddev y: "+interpolated.get(1, 0));
+          //System.out.println("std dev rotation: "+interpolated.get(2, 0));
           // set the pose in the pose consumer
-          System.out.println("FPGA:" + Timer.getFPGATimestamp() + " pose timestamp:" + poseEstimate.timestampSeconds);
+          //System.out.println("FPGA:" + Timer.getFPGATimestamp() + " pose timestamp:" + poseEstimate.timestampSeconds);
           m_VisionConsumer.accept(poseEstimate.pose, poseEstimate.timestampSeconds, interpolated);
           /* */
           System.out.println("pose X: "+poseEstimate.pose.getX());
