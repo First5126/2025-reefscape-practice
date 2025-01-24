@@ -21,8 +21,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.vision.AprilTagLocalization;
-import frc.robot.vision.AprilTagLocalizationConstants;
 
 public class RobotContainer {
   private final CommandSwerveDrivetrain m_drivetrain = TunerConstants.DriveTrain;
@@ -41,11 +39,6 @@ public class RobotContainer {
     private final CommandXboxController m_codriver_controller = new CommandXboxController(1);
 
     private final SendableChooser<Command> autoChooser = AutoBuilder.buildAutoChooser(); 
-    private AprilTagLocalization m_aprilTagLocalization = new AprilTagLocalization(
-      m_drivetrain::getPose2d,
-      m_drivetrain::addVisionMeasurement,
-      AprilTagLocalizationConstants.LIMELIGHT_DETAILS
-    );
 
     public RobotContainer() {
         configureBindings();
