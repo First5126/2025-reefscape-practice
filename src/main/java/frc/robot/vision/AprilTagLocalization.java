@@ -136,7 +136,7 @@ public class AprilTagLocalization {
           m_VisionConsumer.accept(poseEstimate.pose, poseEstimate.timestampSeconds, interpolated);
         }
         m_OldYaw.mut_replace(m_yaw);
-      } 
+      }
     }
   }
   
