@@ -121,7 +121,7 @@ public class AprilTagLocalization {
       LimelightHelpers.SetRobotOrientation(limelightDetail.name, m_yaw.in(Degrees), yawRate.in(DegreesPerSecond),0,0,0,0 );  // Set Orientation using LimelightHelpers.SetRobotOrientation and the m_robotPoseSupplier
       // Get the pose from the Limelight
       PoseEstimate poseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightDetail.name);  // Get the pose from the Limelight 
-      if (poseEstimate != null && poseEstimate.pose.getX()!=0.0 && poseEstimate.pose.getY()!=0.0) {
+      if (poseEstimate != null && poseEstimate.pose.getX() != 0.0 && poseEstimate.pose.getY() != 0.0) {
         double scale = poseEstimate.avgTagDist / MAX_TAG_DISTANCE.in(Meters); // scale the std deviation by the distance
         // Validate the pose for sanity reject bad poses  if fullTrust is true accept regarless of sanity
 
