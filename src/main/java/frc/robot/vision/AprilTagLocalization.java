@@ -88,7 +88,7 @@ public class AprilTagLocalization {
    * @param observation
    * @return
    */
-  private boolean isPoseOfffield(Pose2d observation) { 
+  private boolean isPoseOffField(Pose2d observation) { 
     // Coordinates for where Pose is on the field
     return observation.getX() < 0.0 // What X position robot is on the field.
         || observation.getY() < 0.0 // What Y position robot is on the field.
