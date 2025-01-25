@@ -70,12 +70,8 @@ public class RobotContainer {
     ));
 
     m_driverController.rightBumper().onTrue(m_drivetrain.zero_pidgeon());
-    m_driverController.a().whileTrue(m_drivetrain.goToPose(new Pose2d(0,0,Rotation2d.fromDegrees(0))));
-    m_driverController.b().whileTrue(m_drivetrain.goToPose(new Pose2d(7.2, 6.200, Rotation2d.fromDegrees(0))));
     m_driverController.y().whileTrue(m_aprilTagLocalization.setTrust(true));
     m_driverController.y().onFalse(m_aprilTagLocalization.setTrust(false));
-
-    m_drivetrain.registerTelemetry(logger::telemeterize);
   }
 
   private void configureCoDriverControls() {
