@@ -22,6 +22,30 @@ public class PoseContants {
     new Pose2d(11.5,7.45,Rotation2d.fromDegrees(90))
     );
 
-  
+    public static final Pose ReefPosition1 = new Pose(
+    new Pose2d(0.95,4,Rotation2d.fromDegrees(0)),
+    new Pose2d(11.66,4.01,Rotation2d.fromDegrees(0))
+    ); 
+    public static final Pose ReefPosition2 = new Pose(
+    new Pose2d(3.8,5.2,Rotation2d.fromDegrees(-55)),
+    new Pose2d(12.3,5.2,Rotation2d.fromDegrees(-55))
+    ); 
+    public static final Pose ReefPosition3 = new Pose(
+    new Pose2d(5.184,5.235,Rotation2d.fromDegrees(-120)),
+    new Pose2d(13.75,5.22,Rotation2d.fromDegrees(-120))
+    ); 
+    public static final Pose ReefPosition4 = new Pose(
+    new Pose2d(5.9,4,Rotation2d.fromDegrees(180)),
+    new Pose2d(14.5,4,Rotation2d.fromDegrees(180))
+    ); 
+    public static final Pose ReefPosition5 = new Pose(
+    new Pose2d(5.2,2.8,Rotation2d.fromDegrees(120)),
+    new Pose2d(13.7,2.7,Rotation2d.fromDegrees(120))
+    ); 
+    public static final Pose ReefPosition6 = new Pose(
+    new Pose2d(3.74,2.8,Rotation2d.fromDegrees(55)),
+    new Pose2d(12.36,2.85,Rotation2d.fromDegrees(55))
+    ); 
 
 }
+
