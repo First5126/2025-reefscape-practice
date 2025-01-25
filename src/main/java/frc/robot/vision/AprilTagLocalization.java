@@ -128,7 +128,7 @@ public class AprilTagLocalization {
         if (m_FullTrust) {
           // set the pose in the pose consumer
           m_poseReset.accept(new Pose2d(poseEstimate.pose.getX(),poseEstimate.pose.getY(),Rotation2d.fromDegrees(m_yaw.in(Degrees))));
-        } else if (!(isPoseOfffield(poseEstimate.pose)) && poseEstimate.avgTagDist < MAX_TAG_DISTANCE.in(Meters)) { // reject poses that are more than max tag distance we trust
+        } else if (!(isPoseOffField(poseEstimate.pose)) && poseEstimate.avgTagDist < MAX_TAG_DISTANCE.in(Meters)) { // reject poses that are more than max tag distance we trust
           // scale std deviation by distance if fullTrust is true set the stdDevs super low.
           Matrix<N3,N1> interpolated = interpolate(limelightDetail.closeStdDevs, limelightDetail.farStdDevs, scale);
           
