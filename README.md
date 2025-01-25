@@ -14,7 +14,6 @@ Welcome to the Parkhill South practice robot code for the [2025 ReefScape][1].
 [4]: https://pathplanner.dev/pplib-getting-started.html#install-pathplannerlib
 [5]: https://maven.ctr-electronics.com/release/com/ctre/phoenix6/latest/Phoenix6-replay-frc2025-latest.json
 
-Lessons Learned:
+# Lessons Learned
 
-For AprilTagLocalization on the vison consumer you have to use Utils.fpgaToCurrentTime on 
-the timestamp otherwise it wont work 
+* For AprilTagLocalization on the vision consumer you have to use Utils.fpgaToCurrentTime on the timestamp otherwise it wont work 
