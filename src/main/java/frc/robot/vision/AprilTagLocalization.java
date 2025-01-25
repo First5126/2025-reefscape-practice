@@ -84,7 +84,7 @@ public class AprilTagLocalization {
   }
 
   /**
-   * Checks if the pose is on the field.
+   * Checks if the pose is off the field.
    * @param observation
    * @return
    */
