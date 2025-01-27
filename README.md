@@ -17,3 +17,5 @@ Welcome to the Parkhill South practice robot code for the [2025 ReefScape][1].
 # Lessons Learned
 
 * For AprilTagLocalization on the vision consumer you have to use Utils.fpgaToCurrentTime on the timestamp otherwise it wont work 
+
+* When creating new limelight details include the inverse of the offset applied to the config
