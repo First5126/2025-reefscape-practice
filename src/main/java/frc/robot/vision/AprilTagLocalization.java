@@ -7,8 +7,10 @@ package frc.robot.vision;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static edu.wpi.first.units.Units.Meters;
-import static edu.wpi.first.units.Units.Second;
 import static edu.wpi.first.units.Units.Seconds;
+import static frc.robot.constants.AprilTagLocalizationConstants.FIELD_LAYOUT;
+import static frc.robot.constants.AprilTagLocalizationConstants.LOCALIZATION_PERIOD;
+import static frc.robot.constants.AprilTagLocalizationConstants.MAX_TAG_DISTANCE;
 
 import java.util.function.Supplier;
 
@@ -18,27 +20,14 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
-import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.MutAngle;
-import edu.wpi.first.units.measure.Per;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
-import static frc.robot.vision.AprilTagLocalizationConstants.LimelightDetails;
-import static frc.robot.vision.AprilTagLocalizationConstants.FIELD_LAYOUT;
-import static frc.robot.vision.AprilTagLocalizationConstants.MAX_TAG_DISTANCE;
-import static frc.robot.vision.AprilTagLocalizationConstants.LOCALIZATION_PERIOD;
-import frc.robot.vision.AprilTagLocalizationConstants.LimelightDetails;
+import frc.robot.constants.AprilTagLocalizationConstants.LimelightDetails;
 import frc.robot.vision.LimelightHelpers.PoseEstimate;
 
 
