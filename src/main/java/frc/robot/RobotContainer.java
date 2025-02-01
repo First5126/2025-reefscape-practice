@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.QuickMovementCommandFactory;
 import frc.robot.vision.AprilTagLocalization;
 import frc.robot.vision.AprilTagLocalizationConstants;
 
@@ -46,6 +47,8 @@ public class RobotContainer {
       m_drivetrain::addVisionMeasurement,
       AprilTagLocalizationConstants.LIMELIGHT_DETAILS
     );
+
+    private final QuickMovementCommandFactory m_quickMovementCommandFactory = new QuickMovementCommandFactory(m_drivetrain);
 
     public RobotContainer() {
         configureBindings();
