@@ -18,9 +18,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-
+import frc.robot.commands.ExampleCommand;
+import frc.robot.constants.PoseConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.QuickMovementCommandFactory;
 import frc.robot.vision.AprilTagLocalization;
 import frc.robot.vision.AprilTagLocalizationConstants;
@@ -49,6 +51,7 @@ public class RobotContainer {
     );
 
     private final QuickMovementCommandFactory m_quickMovementCommandFactory = new QuickMovementCommandFactory(m_drivetrain);
+    private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
     public RobotContainer() {
         configureBindings();
@@ -69,7 +72,8 @@ public class RobotContainer {
             m_driverController::getLeftX
         ));
 
-        m_driverController.a().whileTrue(m_drivetrain.goToPose(new Pose2d(0,0,Rotation2d.fromDegrees(0))));
+        m_driverController.a().whileTrue(m_quickMovementCommandFactory.moveToGamePosition(PoseConstants.leftCoralStationPosition1.getPose(), 2.0, m_exampleSubsystem.exampleMethodCommand()));
+
   }
 
   private void configureCoDriverControls() {
