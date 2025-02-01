@@ -4,16 +4,18 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
+
 public class Record extends SubsystemBase {
   private CommandXboxController m_driverController;
   private CommandXboxController m_coDriverController;
 
-  private String m_positionSelection;
+  private String m_positionSelection = "";
   private boolean positionEnabled = false;
   
 
@@ -27,14 +29,50 @@ public class Record extends SubsystemBase {
    *
    * @return a command
    */
-  public Command StartRecord() {
-    // Inline construction of command goes here.
-    // Subsystem::RunOnce implicitly requires `this` subsystem.
-    return Commands.run(
+  public Command setFar() {
+    return Commands.runOnce(
         () -> {
-             
+             m_positionSelection = "far";
+              });
+  }
+  public Command setNear() {
+    return Commands.runOnce(
+        () -> {
+              m_positionSelection = "near";
+              });
+  }
+  public Command setRight() {
+    return Commands.runOnce(
+        () -> {
+          if (positionEnabled) {
+            if (m_positionSelection == "far") {
+              m_positionSelection = "far right";
+            } else {
+              m_positionSelection = "near right";
+            }
+          }             
         });
   }
+  public Command setLeft() {
+    return Commands.runOnce(
+        () -> {
+          if (positionEnabled) {
+            if (m_positionSelection == "far") {
+              m_positionSelection = "far left";
+            } else {
+              m_positionSelection = "near left";
+            }
+          }
+        });
+  }
+  public Command SetEnabled() {
+    return Commands.runOnce(
+        () -> {
+             positionEnabled = !positionEnabled;
+             m_positionSelection = "";
+        });
+  }
+  
 
   /**
    * An example method querying a boolean state of the subsystem (for example, a digital sensor).
@@ -48,32 +86,9 @@ public class Record extends SubsystemBase {
 
   @Override
   public void periodic() {
-    //When back button is pressed...
-    if (positionEnabled) {
-      switch (m_driverController.getHID().getPOV()) {
-        case 0:
-         m_positionSelection = "far";
-          break;
-        case 90:
-         if (m_positionSelection.equals("far")){
-          m_positionSelection = "far right";
-         } else if (m_positionSelection.equals("near")) {
-          m_positionSelection = "near right";
-         }
-          break;
-        case 180:
-         m_positionSelection = "near";
-          break;
-        case 270:
-        if (m_positionSelection.equals("far")){
-          m_positionSelection = "far left";
-         } else if (m_positionSelection.equals("near")) {
-          m_positionSelection = "near left";
-         }
-        
-          break;
-      }
-    }
+    SmartDashboard.putBoolean("Position enabled", positionEnabled);
+    SmartDashboard.putString("Position Selection", m_positionSelection);
+    //add code below
   }
 
   @Override
