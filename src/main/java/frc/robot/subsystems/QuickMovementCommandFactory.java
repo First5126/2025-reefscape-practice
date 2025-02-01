@@ -2,16 +2,23 @@ package frc.robot.subsystems;
 
 import java.util.function.Supplier;
 
+import com.ctre.phoenix6.SignalLogger;
+
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
+import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class QuickMovementCommandFactory extends SubsystemBase {
   
   private CommandSwerveDrivetrain m_drivetrain;
   private Supplier<Pose2d> m_robotPoseSupplier;
-  private Pose2d m_pointPose;
-  private double m_minimumDistance;
+  private Pose2d m_pointPose = new Pose2d(0,0,Rotation2d.fromDegrees(0));
+  private double m_minimumDistance = 0;
 
   public QuickMovementCommandFactory(CommandSwerveDrivetrain drivetrain) {
     this.m_drivetrain = drivetrain;
@@ -19,15 +26,15 @@ public class QuickMovementCommandFactory extends SubsystemBase {
   }
 
   public Command moveToGamePosition(Pose2d position, Double distance, Command ... secondaryCommands) {
+
     this.m_pointPose = position;
     this.m_minimumDistance = distance;
 
-    Command returnCommand = run(() -> {m_drivetrain.goToPose(position);}).until(this::isClose).alongWith(m_drivetrain.goToPose(position));
+    Command goToPose = m_drivetrain.goToPose(position);
+    Command then = Commands.waitUntil(this::isClose).andThen(secondaryCommands);
 
-    for (Command command : secondaryCommands) {
-      returnCommand = returnCommand.alongWith(command);
-    }
-
+    Command returnCommand = Commands.parallel(goToPose,then);
+    
     return returnCommand;
   }
 
@@ -38,7 +45,8 @@ public class QuickMovementCommandFactory extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    
+    SmartDashboard.putBoolean("IsWithinDistance",isClose());
   }
 
   @Override

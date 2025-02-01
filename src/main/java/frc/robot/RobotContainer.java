@@ -23,6 +23,7 @@ import frc.robot.constants.PoseConstants;import frc.robot.constants.AprilTagLoca
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.LedLights;
 import frc.robot.subsystems.QuickMovementCommandFactory;
 import frc.robot.vision.AprilTagLocalization;
 
@@ -45,14 +46,16 @@ public class RobotContainer {
   private final Telemetry logger = new Telemetry(MaxSpeed);
 
     private final SendableChooser<Command> autoChooser = AutoBuilder.buildAutoChooser(); 
-    /*private AprilTagLocalization m_aprilTagLocalization = new AprilTagLocalization(
+    private AprilTagLocalization m_aprilTagLocalization = new AprilTagLocalization(
       m_drivetrain::getPose2d,
+      m_drivetrain::resetPose,
       m_drivetrain::addVisionMeasurement,
       AprilTagLocalizationConstants.LIMELIGHT_DETAILS
-    );*/
+    );
 
     private final QuickMovementCommandFactory m_quickMovementCommandFactory = new QuickMovementCommandFactory(m_drivetrain);
     private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+    private final LedLights m_ledLights = new LedLights();
 
   public RobotContainer() {
       configureBindings();
@@ -73,9 +76,15 @@ public class RobotContainer {
         m_driverController::getLeftX
     ));
 
-        m_driverController.a().whileTrue(m_drivetrain.goToPose(new Pose2d(0,0,Rotation2d.fromDegrees(0))));
-  }
+    m_driverController.a().whileTrue(m_quickMovementCommandFactory.moveToGamePosition(PoseConstants.leftCoralStationPosition2.getPose(), 2.0, m_exampleSubsystem.exampleMethodCommand(),m_ledLights.applyColor(10, 10, 255)));
+    m_driverController.rightBumper().onTrue(m_drivetrain.zero_pidgeon());
+    m_driverController.b().whileTrue(m_ledLights.applyColor(255, 0, 0));
+    
+    m_driverController.y().whileTrue(m_aprilTagLocalization.setTrust(true));
+    m_driverController.y().whileFalse(m_aprilTagLocalization.setTrust(false));
 
+    logger.telemeterize(m_drivetrain.getState());
+  }
   private void configureCoDriverControls() {
     // Setup codriver's controlls
   }
