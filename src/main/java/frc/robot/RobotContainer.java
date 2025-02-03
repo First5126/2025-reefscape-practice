@@ -4,27 +4,23 @@
 
 package frc.robot;
 
-import static edu.wpi.first.units.Units.*;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.RadiansPerSecond;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.commands.PathPlannerAuto;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.CommandState;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.vision.AprilTagLocalization;
 import frc.robot.vision.AprilTagLocalizationConstants;
-import frc.robot.subsystems.Record;
 
 public class RobotContainer {
   private final CommandSwerveDrivetrain m_drivetrain = TunerConstants.DriveTrain;
@@ -44,7 +40,7 @@ public class RobotContainer {
 
   private final Telemetry logger = new Telemetry(MaxSpeed);
 
-  private Record m_record = new Record(m_driverController, m_coDriverController);
+  private final CommandState m_commandState = new CommandState("up");
   
   private final SendableChooser<Command> autoChooser = AutoBuilder.buildAutoChooser(); 
   private AprilTagLocalization m_aprilTagLocalization = new AprilTagLocalization(
@@ -76,8 +72,14 @@ public class RobotContainer {
     m_driverController.rightBumper().onTrue(m_drivetrain.zero_pidgeon());
     m_driverController.y().whileTrue(m_aprilTagLocalization.setTrust(true));
     m_driverController.y().onFalse(m_aprilTagLocalization.setTrust(false));
-    
-   
+    m_driverController.leftBumper().onTrue(m_commandState.toggleRecording());
+
+    m_driverController.povUp().whileTrue(m_commandState.setSelectedPose("up"));
+    m_driverController.povDown().whileTrue(m_commandState.setSelectedPose("down"));
+    m_driverController.povLeft().whileTrue(m_commandState.setSelectedPose("left"));
+    m_driverController.povRight().whileTrue(m_commandState.setSelectedPose("right"));
+
+   m_driverController.a().whileTrue(m_drivetrain.goToPose(m_commandState.getSelectedPose2d()));
   }
 
   private void configureCoDriverControls() {

@@ -4,7 +4,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 
-public class PoseContants {
+public class PoseConstants {
 
   public static class Pose {
     private Pose2d redPose,bluePose;
