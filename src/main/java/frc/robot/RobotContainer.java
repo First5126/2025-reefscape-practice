@@ -75,14 +75,7 @@ public class RobotContainer {
         m_driverController::getLeftY,
         m_driverController::getLeftX
     ));
-
-    m_driverController.a().whileTrue(m_quickMovementCommandFactory.moveToGamePosition(PoseConstants.leftCoralStationPosition2.getPose(), 2.0, m_exampleSubsystem.exampleMethodCommand(),m_ledLights.applyColor(10, 10, 255)));
-    m_driverController.rightBumper().onTrue(m_drivetrain.zero_pidgeon());
-    m_driverController.b().whileTrue(m_ledLights.applyColor(255, 0, 0));
     
-    m_driverController.y().whileTrue(m_aprilTagLocalization.setTrust(true));
-    m_driverController.y().whileFalse(m_aprilTagLocalization.setTrust(false));
-
     logger.telemeterize(m_drivetrain.getState());
   }
   private void configureCoDriverControls() {
