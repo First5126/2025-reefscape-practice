@@ -19,7 +19,6 @@ public class Climbing extends SubsystemBase {
     m_rightMotor.setControl(new Follower(m_leftMotor.getDeviceID(), true));
   }
 
-  // TODO: add the correct constant for the position
   public Command climb() {
     return run(() -> {setControl(m_PositionVoltage.withPosition(ClimbingConstants.ROTATIONS_FOR_CLIMB));});
   }

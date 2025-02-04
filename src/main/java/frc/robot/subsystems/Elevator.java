@@ -60,7 +60,7 @@ public class Elevator extends SubsystemBase {
     System.out.println("notified");
   }
   public double getElevatorHeight(){
-    return m_leftMotor / 24.0 * 2.0 * Math.PI * 0.05;
+    return m_leftMotor.get() / 24.0 * 2.0 * Math.PI * 0.05;
   }
 
   @Override
@@ -68,18 +68,6 @@ public class Elevator extends SubsystemBase {
     SmartDashboard.putNumber("Elevator Height: " , getElevatorHeight());
     SmartDashboard.putNumber("SimElevator Height: " , m_simulator.getPositionMeters());
     // This method will be called once per scheduler run
-  }
-
-  @Override
-  public void simulationPeriodic() {
-    // In this method, we update our simulation of our elevator.
-    // We set the inputs of the elevator plant to the voltages, and update the simulation.
-    m_simulator.setInput(m_leftMotor.getMotorVoltage().getValue());
-    m_simulator.update(0.020);// 20 ms per update, 50 Hz update rate
-    // We then set the simulated encoder distance and velocity in the elevator object.
-    TalonFXSimState simState = m_leftMotor.getSimState();
-    simState.setSupplyVoltage(m_simulator.getPositionMeters());
-    simState.setRotorVelocity(m_simulator.getVelocityMetersPerSecond());
   }
 
   private void setSpeed(double speed){
