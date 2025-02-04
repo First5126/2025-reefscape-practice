@@ -13,6 +13,7 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -41,17 +42,17 @@ public class RobotContainer {
   private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
   private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
   private final CommandXboxController m_driverController = new CommandXboxController(0);
-  private final CommandXboxController m_codriver_controller = new CommandXboxController(1);
+  private final CommandXboxController m_coDriverController = new CommandXboxController(1);
 
   private final Telemetry logger = new Telemetry(MaxSpeed);
 
-    private final SendableChooser<Command> autoChooser = AutoBuilder.buildAutoChooser(); 
-    private AprilTagLocalization m_aprilTagLocalization = new AprilTagLocalization(
-      m_drivetrain::getPose2d,
-      m_drivetrain::resetPose,
-      m_drivetrain::addVisionMeasurement,
-      AprilTagLocalizationConstants.LIMELIGHT_DETAILS
-    );
+  private final SendableChooser<Command> autoChooser = AutoBuilder.buildAutoChooser(); 
+  private AprilTagLocalization m_aprilTagLocalization = new AprilTagLocalization(
+    m_drivetrain::getPose2d,
+    m_drivetrain::resetPose,
+    m_drivetrain::addVisionMeasurement,
+    AprilTagLocalizationConstants.LIMELIGHT_DETAILS
+  );
 
     private final QuickMovementCommandFactory m_quickMovementCommandFactory = new QuickMovementCommandFactory(m_drivetrain);
     private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
@@ -67,7 +68,7 @@ public class RobotContainer {
 
   private void configureBindings() {
     // Note that X is defined as forward according to WPILib convention,
-    // and Y is defined as to the left according to WPILib convention.
+    // and Y is defined as to the left according to WPILib convention.    
     
     m_drivetrain.setDefaultCommand(m_drivetrain.gasPedalCommand(
         m_driverController::getRightTriggerAxis,

@@ -335,8 +335,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 m_hasAppliedOperatorPerspective = true;
             });
         }
-        System.out.println("drivetrain pose X: " + getPose2d().getX());
-        System.out.println("drivetrain pose Y: " + getPose2d().getY());
+        //System.out.println("drivetrain pose X: " + getPose2d().getX());
+        //System.out.println("drivetrain pose Y: " + getPose2d().getY());
     }
 
     private void startSimThread() {
