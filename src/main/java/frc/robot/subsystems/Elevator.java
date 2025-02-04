@@ -15,14 +15,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.ctre.phoenix6.sim.TalonFXSimState;
-import edu.wpi.first.math.numbers.N1;
-import edu.wpi.first.math.numbers.N2;
-import edu.wpi.first.math.system.LinearSystem;
-import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.math.system.plant.LinearSystemId;
-import edu.wpi.first.wpilibj.simulation.ElevatorSim;
-import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -32,12 +25,7 @@ public class Elevator extends SubsystemBase {
   private final TalonFX m_rightMotor = new TalonFX(1);
   private final Follower m_rightFollow = new Follower(0, true);
   private final PositionVoltage m_PositionVoltage = new PositionVoltage(0).withSlot(0).withFeedForward(0);
-  private final VoltageOut m_VoltageOut = new VoltageOut(0);
-  
-  private DCMotor m_motor = DCMotor.getKrakenX60(2).withReduction(24);
-  private LinearSystem<N2,N1,N1>  m_elevatorPlant; 
-  private ElevatorSim m_simulator ;
-  
+  private final VoltageOut m_VoltageOut = new VoltageOut(0);  
 
   public Elevator() {
     TalonFXConfiguration leftConfig = new TalonFXConfiguration();
@@ -53,12 +41,9 @@ public class Elevator extends SubsystemBase {
     m_rightMotor.getConfigurator().apply(rightConfig);
     m_rightMotor.setControl(m_rightFollow);
     m_leftMotor.setPosition(0);
-    m_rightMotor.setPosition(0); }
-
-    
-  public void notifyThis(){
-    System.out.println("notified");
+    m_rightMotor.setPosition(0); 
   }
+
   public double getElevatorHeight(){
     return m_leftMotor.get() / 24.0 * 2.0 * Math.PI * 0.05;
   }
@@ -66,7 +51,6 @@ public class Elevator extends SubsystemBase {
   @Override
   public void periodic() {
     SmartDashboard.putNumber("Elevator Height: " , getElevatorHeight());
-    SmartDashboard.putNumber("SimElevator Height: " , m_simulator.getPositionMeters());
     // This method will be called once per scheduler run
   }
 
