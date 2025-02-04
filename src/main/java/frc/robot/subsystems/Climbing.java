@@ -17,8 +17,6 @@ public class Climbing extends SubsystemBase {
 
   public Climbing() {
     m_rightMotor.setControl(new Follower(m_leftMotor.getDeviceID(), true));
-
-    unClimb();
   }
 
   // TODO: add the correct constant for the position
