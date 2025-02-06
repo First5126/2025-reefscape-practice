@@ -11,8 +11,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class CoralRollers extends SubsystemBase {
+
     private SparkMax coralSparkMax;
-    /** Creates a new ExampleSubsystem. */
+
     public CoralRollers() {
         coralSparkMax = new SparkMax(0, MotorType.kBrushless);
     }
@@ -21,54 +22,37 @@ public class CoralRollers extends SubsystemBase {
         coralSparkMax.set(speed);
     }
     
-    /**
-     * Example command factory method.
-    *
-    * @return a command
-    */
     public Command setRollerSpeed(double speed) {
-    // Inline construction of command goes here.
-    // Subsystem::RunOnce implicitly requires `this` subsystem.
         return runOnce(
             () -> {
                 runRollers(speed);
-                /* one-time action goes here */
             });
     }
     private void rollIn() {
         coralSparkMax.set(0.8);
     }
     public Command rollInCommand() {
-        // Inline construction of command goes here.
-        // Subsystem::RunOnce implicitly requires `this` subsystem.
             return runOnce(
                 () -> {
                     rollIn();
-                    /* one-time action goes here */
                 });
     }
     private void rollOut() {
         coralSparkMax.set(-0.8);
     }
     public Command rollOutCommand() {
-        // Inline construction of command goes here.
-        // Subsystem::RunOnce implicitly requires `this` subsystem.
             return runOnce(
                 () -> {
                     rollOut();
-                    /* one-time action goes here */
                 });
     }
     private void stop() {
         coralSparkMax.set(0);
     }
     public Command stopCommand() {
-        // Inline construction of command goes here.
-        // Subsystem::RunOnce implicitly requires `this` subsystem.
             return runOnce(
                 () -> {
                     stop();
-                    /* one-time action goes here */
                 });
     }
 } 
