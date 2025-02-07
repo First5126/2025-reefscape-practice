@@ -6,4 +6,6 @@ package frc.robot.constants;
 
 public class CANConstants {
   public static final int CANDLE_ID = 0;
+  public static final int AlgaeMotorLeft_ID = 1;
+  public static final int AlgaeMotorRight_ID = 2;
 }

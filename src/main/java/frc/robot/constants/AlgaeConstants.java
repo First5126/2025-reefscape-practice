@@ -4,6 +4,14 @@
 
 package frc.robot.constants;
 
+import static edu.wpi.first.units.Units.RevolutionsPerSecond;
+
+import com.ctre.phoenix6.controls.VelocityVoltage;
+
+import edu.wpi.first.units.measure.AngularVelocity;
+
 public class AlgaeConstants {
-  public static final double speed = 3;
+  public static final AngularVelocity INTAKE_SPEED = RevolutionsPerSecond.of(3);
+  public static final AngularVelocity OUTTAKE_SPEED = RevolutionsPerSecond.of(-3);
+  public static final AngularVelocity SHOOTING_SPEED = RevolutionsPerSecond.of(-10);
 }
