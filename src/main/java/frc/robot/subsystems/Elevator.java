@@ -42,6 +42,8 @@ public class Elevator extends SubsystemBase {
     m_rightMotor.setControl(m_rightFollow);
     m_leftMotor.setPosition(0);
     m_rightMotor.setPosition(0); 
+    m_leftMotor.setControl(m_PositionVoltage.withPosition(0));
+    m_rightMotor.setControl(m_PositionVoltage.withPosition(0));
   }
 
   public double getElevatorHeight(){
