@@ -13,6 +13,7 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.AutoBuilder;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.constants.AprilTagLocalizationConstants;
@@ -59,14 +60,14 @@ public class RobotContainer {
       configureCoDriverControls();
 
       // Adds a auto chooser to Shuffle Board to choose autos
-      //SmartDashboard.putData("Auto Chooser", autoChooser);
+      SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
   private void configureBindings() {
     // Note that X is defined as forward according to WPILib convention,
     // and Y is defined as to the left according to WPILib convention.    
     
-      m_drivetrain.setDefaultCommand(m_drivetrain.gasPedalCommand(
+    m_drivetrain.setDefaultCommand(m_drivetrain.gasPedalCommand(
         m_driverController::getRightTriggerAxis,
         m_driverController::getRightX,
         m_driverController::getLeftY,
@@ -75,7 +76,7 @@ public class RobotContainer {
     ));
     
 
-    //logger.telemeterize(m_drivetrain.getState());
+    logger.telemeterize(m_drivetrain.getState());
   }
     
   private void configureCoDriverControls() {
@@ -84,7 +85,6 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    //return autoChooser.getSelected();
-    return null;
+    return autoChooser.getSelected();
   }
 }
