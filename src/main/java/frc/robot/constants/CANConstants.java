@@ -4,6 +4,9 @@
 
 package frc.robot.constants;
 
-public class CANConstants {
+public class CANConstants { 
   public static final int CANDLE_ID = 0;
+
+  public static final int LEFT_CLIMBING_MOTOR = 0;
+  public static final int RIGHT_CLIMBING_MOTOR = 0;
 }
