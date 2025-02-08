@@ -1,6 +1,8 @@
 package frc.robot.constants;
 
 public class ClimbingConstants {
-    // The amount of rotations required for the robot to enter the climbed state
     public static final double ROTATIONS_FOR_CLIMB = 0;
+
+    public static final int FORWARD_DIGITAL_LIMIT = 0;
+    public static final int REVERSE_DIGITAL_LIMIT = 1;
 }
