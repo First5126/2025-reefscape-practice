@@ -10,8 +10,8 @@ import frc.robot.constants.AlgaeConstants;
 import frc.robot.constants.CANConstants;
 
 public class AlgaeRollers extends SubsystemBase {
-  public TalonFX m_motorOne = new TalonFX(CANConstants.AlgaeMotorLeft_ID);
-  public TalonFX m_motorTwo = new TalonFX(CANConstants.AlgaeMotorRight_ID);
+  public TalonFX m_motorOne = new TalonFX(CANConstants.LEFT_ALGAE_MOTOR);
+  public TalonFX m_motorTwo = new TalonFX(CANConstants.RIGHT_ALGAE_MOTOR);
   public VelocityVoltage m_velocityVoltage = new VelocityVoltage(0);
 
   public AlgaeRollers() {
