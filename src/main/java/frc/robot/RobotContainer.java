@@ -8,25 +8,24 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
-import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.AutoBuilder;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.constants.AprilTagLocalizationConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Elevator;
-import frc.robot.subsystems.LedLights;
-import frc.robot.subsystems.QuickMovementCommandFactory;
 import frc.robot.vision.AprilTagLocalization;
+import frc.robot.subsystems.LedLights;
+import frc.robot.subsystems.CommandFactory;
 
 public class RobotContainer {
   private final CommandXboxController m_driverController = new CommandXboxController(0);
-  /*private final CommandSwerveDrivetrain m_drivetrain = TunerConstants.DriveTrain;
+  private final CommandSwerveDrivetrain m_drivetrain = TunerConstants.DriveTrain;
   private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
   private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
@@ -49,11 +48,11 @@ public class RobotContainer {
     AprilTagLocalizationConstants.LIMELIGHT_DETAILS
     );
     
-    private final QuickMovementCommandFactory m_quickMovementCommandFactory = new QuickMovementCommandFactory(m_drivetrain);
+    private final CommandFactory m_quickMovementCommandFactory = new CommandFactory(m_drivetrain);
     
-    private final LedLights m_ledLights = new LedLights();*/
+    private final LedLights m_ledLights = new LedLights();
     private final Elevator m_elevator = new Elevator();
-    //private final SendableChooser<Command> autoChooser = AutoBuilder.buildAutoChooser(); 
+    private final SendableChooser<Command> autoChooser = AutoBuilder.buildAutoChooser(); 
 
   public RobotContainer() {
       configureBindings();
@@ -67,14 +66,14 @@ public class RobotContainer {
     // Note that X is defined as forward according to WPILib convention,
     // and Y is defined as to the left according to WPILib convention.    
     
-    /*m_drivetrain.setDefaultCommand(m_drivetrain.gasPedalCommand(
+      m_drivetrain.setDefaultCommand(m_drivetrain.gasPedalCommand(
         m_driverController::getRightTriggerAxis,
         m_driverController::getRightX,
         m_driverController::getLeftY,
         m_driverController::getLeftX
         
-    ));*/
-    m_driverController.rightStick().whileTrue(m_elevator.openLoopCommand(m_driverController::getLeftY));
+    ));
+    
 
     //logger.telemeterize(m_drivetrain.getState());
   }
