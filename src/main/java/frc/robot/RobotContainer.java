@@ -20,13 +20,19 @@ import frc.robot.constants.AprilTagLocalizationConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Elevator;
+
+import frc.robot.subsystems.LedLights;
+import frc.robot.subsystems.QuickMovementCommandFactory;
 import frc.robot.vision.AprilTagLocalization;
 import frc.robot.subsystems.LedLights;
 import frc.robot.subsystems.CommandFactory;
 
 public class RobotContainer {
   private final CommandXboxController m_driverController = new CommandXboxController(0);
+
   private final CommandSwerveDrivetrain m_drivetrain = TunerConstants.DriveTrain;
+  private final CommandSwerveDrivetrain m_drivetrain = TunerConstants.DriveTrain;
+
   private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
   private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
@@ -49,18 +55,26 @@ public class RobotContainer {
     AprilTagLocalizationConstants.LIMELIGHT_DETAILS
     );
     
+
     private final CommandFactory m_quickMovementCommandFactory = new CommandFactory(m_drivetrain);
     
     private final LedLights m_ledLights = new LedLights();
     private final Elevator m_elevator = new Elevator();
     private final SendableChooser<Command> autoChooser = AutoBuilder.buildAutoChooser(); 
 
+    private final QuickMovementCommandFactory m_quickMovementCommandFactory = new QuickMovementCommandFactory(m_drivetrain);
+    
+    private final LedLights m_ledLights = new LedLights();*/
+    private final Elevator m_elevator = new Elevator();
+    //private final SendableChooser<Command> autoChooser = AutoBuilder.buildAutoChooser(); 
+
+
   public RobotContainer() {
       configureBindings();
       configureCoDriverControls();
 
       // Adds a auto chooser to Shuffle Board to choose autos
-      SmartDashboard.putData("Auto Chooser", autoChooser);
+      //SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
   private void configureBindings() {
@@ -72,18 +86,25 @@ public class RobotContainer {
         m_driverController::getRightX,
         m_driverController::getLeftY,
         m_driverController::getLeftX
-        
+
     ));
     
 
     logger.telemeterize(m_drivetrain.getState());
+
+    m_driverController.rightStick().whileTrue(m_elevator.openLoopCommand(m_driverController::getLeftY));
+
+    //logger.telemeterize(m_drivetrain.getState());
+
   }
     
   private void configureCoDriverControls() {
+
     // Setup codriver's controlls
   }
 
   public Command getAutonomousCommand() {
-    return autoChooser.getSelected();
+    //return autoChooser.getSelected();
+    return null;
   }
 }
