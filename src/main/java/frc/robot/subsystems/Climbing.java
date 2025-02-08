@@ -34,7 +34,6 @@ public class Climbing extends SubsystemBase {
     m_leftMotor.setControl(new DutyCycleOut(0));
   }
 
-  // TODO: add the correct constant for the position
   public Command climb() {
     return run(() -> {setPosition(ClimbingConstants.ROTATIONS_FOR_CLIMB);});
   }
