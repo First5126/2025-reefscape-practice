@@ -21,6 +21,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.CANConstants;
 
+import frc.robot.constants.ElevatorConstants.CoralLevels;
+
+
 public class Elevator extends SubsystemBase {
   private final TalonFX m_leftMotor = new TalonFX(CANConstants.LEFT_ELAVOTAR_MOTOR);
   private final TalonFX m_rightMotor = new TalonFX(CANConstants.RIGHT_ELAVOTAR_MOTOR);
@@ -67,7 +70,7 @@ public class Elevator extends SubsystemBase {
 
 
   //using exesting mPositionVoltage write set position method in meters
-  public Command setPosition(double position){
-    return run(() -> setControl(m_PositionVoltage.withPosition(position)));
+  public Command setPosition(CoralLevels position){
+    return run(() -> setControl(m_PositionVoltage.withPosition(position.heightAngle)));
   }
 }

@@ -10,20 +10,17 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 
 public class Record extends SubsystemBase {
-  private CommandXboxController m_driverController;
-  private CommandXboxController m_coDriverController;
 
   private String m_positionSelection = "";
   private boolean positionEnabled = false;
   
 
-  public Record(CommandXboxController driverController, CommandXboxController copilotController) {
-    m_driverController = driverController;
-    m_coDriverController = copilotController;
+  public Record() {
+    //initialize code below
+    
   }
 
   /**
