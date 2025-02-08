@@ -36,15 +36,15 @@ public class Climbing extends SubsystemBase {
 
   // TODO: add the correct constant for the position
   public Command climb() {
-    return run(() -> {setControl(m_positionVoltage.withPosition(ClimbingConstants.ROTATIONS_FOR_CLIMB).withLimitForwardMotion(m_forwardLimit.get()).withLimitReverseMotion(m_reverseLimit.get()));});
+    return run(() -> {setPosition(ClimbingConstants.ROTATIONS_FOR_CLIMB);});
   }
 
   public Command unClimb() {
-    return run(() -> {setControl(m_positionVoltage.withPosition(0).withLimitForwardMotion(m_forwardLimit.get()).withLimitReverseMotion(m_reverseLimit.get()));});
+    return run(() -> {setPosition(0);});
   }
 
-  public void setControl(ControlRequest control){
-    m_leftMotor.setControl(control);
+  public void setPosition(double position){
+    m_leftMotor.setControl(m_positionVoltage.withPosition(0).withLimitForwardMotion(m_forwardLimit.get()).withLimitReverseMotion(m_reverseLimit.get()));
   }
 
   @Override
