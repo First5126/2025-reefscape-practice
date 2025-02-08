@@ -21,10 +21,24 @@ public class CommandFactory {
   private CoralRollers m_coralRollers;
   private AlgaeRollers m_algaeRollers;
   private Climbing m_climbing;
+  private LedLights m_ledLights;
+  
 
-  public CommandFactory(CommandSwerveDrivetrain drivetrain) {
+  public CommandFactory(
+    CommandSwerveDrivetrain drivetrain,
+    AlgaeRollers algaeRollers,
+    Climbing climbing,
+    Elevator elevator,
+    CoralRollers coralRollers,
+    LedLights ledLights
+  ) {
     this.m_drivetrain = drivetrain;
     this.m_robotPoseSupplier = m_drivetrain::getPose2d;
+    this.m_elevator = elevator;
+    this.m_coralRollers = coralRollers;
+    this.m_algaeRollers = algaeRollers;
+    this.m_climbing = climbing;
+    this.m_ledLights = ledLights;
   }
 
   /*
