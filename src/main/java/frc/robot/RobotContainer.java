@@ -80,7 +80,6 @@ public class RobotContainer {
   }
     
   private void configureCoDriverControls() {
-
     // Setup codriver's controlls
   }
 

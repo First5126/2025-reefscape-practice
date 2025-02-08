@@ -47,7 +47,4 @@ public class CommandFactory {
     
     return returnCommand;
   }
-
-  
-
 }
