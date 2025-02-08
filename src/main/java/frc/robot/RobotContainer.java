@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.constants.AprilTagLocalizationConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.LedLights;
 import frc.robot.subsystems.QuickMovementCommandFactory;
 import frc.robot.vision.AprilTagLocalization;
@@ -52,6 +53,7 @@ public class RobotContainer {
     private final QuickMovementCommandFactory m_quickMovementCommandFactory = new QuickMovementCommandFactory(m_drivetrain);
 
     private final LedLights m_ledLights = new LedLights();
+    private final Elevator m_elevator = new Elevator();
 
   public RobotContainer() {
       configureBindings();
@@ -70,11 +72,15 @@ public class RobotContainer {
         m_driverController::getRightX,
         m_driverController::getLeftY,
         m_driverController::getLeftX
+        
     ));
-    
+    m_driverController.rightStick().whileTrue(m_elevator.openLoopCommand(m_driverController::getLeftY));
+
     logger.telemeterize(m_drivetrain.getState());
   }
+    
   private void configureCoDriverControls() {
+
     // Setup codriver's controlls
   }
 
