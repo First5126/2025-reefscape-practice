@@ -23,7 +23,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Elevator extends SubsystemBase {
   private final TalonFX m_leftMotor = new TalonFX(0);
   private final TalonFX m_rightMotor = new TalonFX(1);
-  private final Follower m_rightFollow = new Follower(0, true);
   private final PositionVoltage m_PositionVoltage = new PositionVoltage(0).withSlot(0).withFeedForward(0);
   private final VoltageOut m_VoltageOut = new VoltageOut(0);  
 
@@ -39,20 +38,17 @@ public class Elevator extends SubsystemBase {
     
     m_leftMotor.getConfigurator().apply(leftConfig);
     m_rightMotor.getConfigurator().apply(rightConfig);
-    m_rightMotor.setControl(m_rightFollow);
-    m_leftMotor.setPosition(0);
-    m_rightMotor.setPosition(0); 
-    m_leftMotor.setControl(m_PositionVoltage.withPosition(0));
-    m_rightMotor.setControl(m_PositionVoltage.withPosition(0));
+    m_rightMotor.setControl(new Follower(m_leftMotor.getDeviceID(), true));
+    m_leftMotor.setControl(m_VoltageOut.withOutput(0));
   }
 
   public double getElevatorHeight(){
-    return m_leftMotor.get() / 24.0 * 2.0 * Math.PI * 0.05;
+    return m_leftMotor.getPosition().getValueAsDouble() / 24.0 * 2.0 * Math.PI * 0.05;//24:1 gear ratio, 2" diameter pulley
   }
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Elevator Height: " , getElevatorHeight());
+    SmartDashboard.putNumber("Elevator Height: ", getElevatorHeight());
     // This method will be called once per scheduler run
   }
 
