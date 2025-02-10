@@ -20,7 +20,7 @@ import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Time;
 import frc.robot.generated.TunerConstants;
 
-/** Add your docs here. */
+
 public class DrivetrainConstants {
   public static final double maxSpeedMetersPerSecond = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
   public static final double trackWidthMeters = Units.inchesToMeters(18.78);

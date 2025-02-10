@@ -17,14 +17,11 @@ public class Climbing extends SubsystemBase {
   private final TalonFX m_leftMotor = new TalonFX(CANConstants.LEFT_CLIMBING_MOTOR);
   private final TalonFX m_rightMotor = new TalonFX(CANConstants.RIGHT_CLIMBING_MOTOR);
   private final PositionVoltage m_positionVoltage = new PositionVoltage(0).withSlot(0).withFeedForward(0);
-
   private final DigitalInput m_forwardLimit = new DigitalInput(ClimbingConstants.FORWARD_DIGITAL_LIMIT);
   private final DigitalInput m_reverseLimit = new DigitalInput(ClimbingConstants.REVERSE_DIGITAL_LIMIT);
 
   public Climbing() {
-
     m_rightMotor.setControl(new Follower(m_leftMotor.getDeviceID(), true));
-
     m_leftMotor.setNeutralMode(NeutralModeValue.Brake);
     m_leftMotor.setControl(new DutyCycleOut(0));
   }
@@ -39,15 +36,5 @@ public class Climbing extends SubsystemBase {
 
   public void setPosition(double position){
     m_leftMotor.setControl(m_positionVoltage.withPosition(0).withLimitForwardMotion(m_forwardLimit.get()).withLimitReverseMotion(m_reverseLimit.get()));
-  }
-
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-  }
-
-  @Override
-  public void simulationPeriodic() {
-    // This method will be called once per scheduler run during simulation
   }
 }

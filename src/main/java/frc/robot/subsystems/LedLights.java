@@ -25,8 +25,6 @@ public class LedLights extends SubsystemBase {
    * @return a Command for applying a color
    */
   public Command applyColor(int r, int g, int b) {
-    // Inline construction of command goes here.
-    // Subsystem::RunOnce implicitly requires `this` subsystem.
     return runOnce(
       () -> {
         m_candle.setLEDs(r,g,b);
@@ -34,8 +32,6 @@ public class LedLights extends SubsystemBase {
   }
 
   public Command lightBowCommand() {
-    // Inline construction of command goes here.
-    // Subsystem::RunOnce implicitly requires `this` subsystem.
     m_candle.setLEDs(0,255,0,0,2,10);
         return null;
         }
