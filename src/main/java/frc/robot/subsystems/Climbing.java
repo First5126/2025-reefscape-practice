@@ -56,7 +56,7 @@ public class Climbing extends SubsystemBase {
   }
 
   public void setPosition(double position){
-    m_leftMotor.setControl(m_positionVoltage.withPosition(0));
+    m_leftMotor.setControl(m_positionVoltage.withPosition(0).withLimitReverseMotion(m_reverseLimit.get()));
   }
 
   @Override
