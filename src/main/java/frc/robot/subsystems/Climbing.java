@@ -1,12 +1,8 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.configs.HardwareLimitSwitchConfigs;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.PositionVoltage;
-import com.ctre.phoenix6.controls.TorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.ForwardLimitSourceValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -46,7 +42,6 @@ public class Climbing extends SubsystemBase {
     m_rightMotor.getConfigurator().apply(rightConfig);
   }
 
-  // TODO: add the correct constant for the position
   public Command climb() {
     return run(() -> {setPosition(ClimbingConstants.ROTATIONS_FOR_CLIMB);});
   }
