@@ -28,10 +28,22 @@ public class Climbing extends SubsystemBase {
 
   public Climbing() {
 
+    HardwareLimitSwitchConfigs leftConfig = new HardwareLimitSwitchConfigs();
+    HardwareLimitSwitchConfigs rightConfig = new HardwareLimitSwitchConfigs();
+
+    leftConfig.ForwardLimitSource = ForwardLimitSourceValue.RemoteCANcoder;
+    leftConfig.ForwardLimitRemoteSensorID = ClimbingConstants.FORWARD_DIGITAL_LIMIT;
+
+    rightConfig.ForwardLimitSource = ForwardLimitSourceValue.RemoteCANcoder;
+    rightConfig.ForwardLimitRemoteSensorID = ClimbingConstants.FORWARD_DIGITAL_LIMIT;
+
     m_rightMotor.setControl(new Follower(m_leftMotor.getDeviceID(), true));
 
     m_leftMotor.setNeutralMode(NeutralModeValue.Brake);
     m_leftMotor.setControl(new DutyCycleOut(0));
+
+    m_leftMotor.getConfigurator().apply(leftConfig);
+    m_rightMotor.getConfigurator().apply(rightConfig);
   }
 
   // TODO: add the correct constant for the position
@@ -44,7 +56,7 @@ public class Climbing extends SubsystemBase {
   }
 
   public void setPosition(double position){
-    m_leftMotor.setControl(m_positionVoltage.withPosition(0).withLimitForwardMotion(m_forwardLimit.get()).withLimitReverseMotion(m_reverseLimit.get()));
+    m_leftMotor.setControl(m_positionVoltage.withPosition(0));
   }
 
   @Override
