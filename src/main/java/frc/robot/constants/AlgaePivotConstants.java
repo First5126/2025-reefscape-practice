@@ -10,4 +10,5 @@ public final class AlgaePivotConstants {
 
     public static final double supplyCurrentLimit = 70.0;
     public static final double lowerSupplyCurrentLimit = 10;
+    
 }

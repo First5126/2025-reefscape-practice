@@ -25,8 +25,8 @@ import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.ElevatorConstants.CoralLevels;
 
 public class Elevator extends SubsystemBase {
-  private final TalonFX m_leftMotor = new TalonFX(CANConstants.LEFT_ELEVATOR_MOTOR);
-  private final TalonFX m_rightMotor = new TalonFX(CANConstants.RIGHT_ELEVATOR_MOTOR);
+  private final TalonFX m_leftMotor = new TalonFX(CANConstants.LEFT_ELAVOTAR_MOTOR);
+  private final TalonFX m_rightMotor = new TalonFX(CANConstants.RIGHT_ELAVOTAR_MOTOR);
   private final PositionVoltage m_PositionVoltage = new PositionVoltage(0).withSlot(0).withFeedForward(0);
   private final VoltageOut m_VoltageOut = new VoltageOut(0); 
   private final DigitalInput m_forwardLimit = new DigitalInput(ElevatorConstants.ELEVATOR_FORWARD_LIMIT);
