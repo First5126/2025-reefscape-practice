@@ -13,6 +13,11 @@ public class CANConstants {
 
   public static final int LEFT_ALGAE_MOTOR = 0; 
   public static final int RIGHT_ALGAE_MOTOR = 0;
+  public static final int RIGHT_CORAL_MOTOR = 0;
+  public static final int LEFT_CORAL_MOTOR = 0;
   public static final int RIGHT_ELAVOTAR_MOTOR = 0;
   public static final int LEFT_ELAVOTAR_MOTOR = 1;
+
+  public static final int LEFT_CAN_RANGE_CORAL_ID = 1;
+  public static final int RIGHT_CAN_RANGE_CORAL_ID = 1;
 }
