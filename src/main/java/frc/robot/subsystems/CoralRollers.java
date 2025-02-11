@@ -37,10 +37,10 @@ public class CoralRollers extends SubsystemBase {
         CANrangeConfiguration CANrangeConfiguration = new CANrangeConfiguration();
         CANrangeConfiguration.ProximityParams.ProximityThreshold = CoralConstants.PROXIMITY_THRESHOLD;
 
-        m_LeftCANrange = new CANrange(CANConstants.LEFT_CAN_RANGE_CORAL_ID);
+        m_LeftCANrange = new CANrange(CANConstants.LEFT_CAN_RANGE_CORAL);
         m_LeftCANrange.getConfigurator().apply(CANrangeConfiguration);
 
-        m_RightCANrange = new CANrange(CANConstants.RIGHT_CAN_RANGE_CORAL_ID);
+        m_RightCANrange = new CANrange(CANConstants.RIGHT_CAN_RANGE_CORAL);
         m_RightCANrange.getConfigurator().apply(CANrangeConfiguration);
 
         m_hasGamePiece = new Trigger(this::isDetected).debounce(CoralConstants.DEBOUNCE);
