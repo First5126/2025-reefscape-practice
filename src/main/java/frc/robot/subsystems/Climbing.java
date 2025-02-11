@@ -50,6 +50,16 @@ public class Climbing extends SubsystemBase {
   }
 
   public void setPosition(double position){
-    m_leftMotor.setControl(m_positionVoltage.withPosition(0).withLimitReverseMotion(m_reverseLimit.get()).withLimitForwardMotion(m_forwardLimit.get()));
+    m_leftMotor.setControl(m_positionVoltage.withPosition(0).withLimitForwardMotion(m_forwardLimit.get()).withLimitReverseMotion(m_reverseLimit.get()));
+  }
+
+  @Override
+  public void periodic() {
+    // This method will be called once per scheduler run
+  }
+
+  @Override
+  public void simulationPeriodic() {
+    // This method will be called once per scheduler run during simulation
   }
 }

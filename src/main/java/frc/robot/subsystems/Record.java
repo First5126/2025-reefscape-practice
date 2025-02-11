@@ -17,29 +17,20 @@ public class Record extends SubsystemBase {
   private String m_positionSelection = "";
   private boolean positionEnabled = false;
   
-
-  public Record() {
-    //initialize code below
-    
-  }
-
-  /**
-   * Example command factory method.
-   *
-   * @return a command
-   */
   public Command setFar() {
     return Commands.runOnce(
         () -> {
              m_positionSelection = "far";
               });
   }
+
   public Command setNear() {
     return Commands.runOnce(
         () -> {
               m_positionSelection = "near";
               });
   }
+
   public Command setRight() {
     return Commands.runOnce(
         () -> {
@@ -52,6 +43,7 @@ public class Record extends SubsystemBase {
           }             
         });
   }
+
   public Command setLeft() {
     return Commands.runOnce(
         () -> {
@@ -64,6 +56,7 @@ public class Record extends SubsystemBase {
           }
         });
   }
+
   public Command SetEnabled() {
     return Commands.runOnce(
         () -> {
@@ -71,27 +64,10 @@ public class Record extends SubsystemBase {
              m_positionSelection = "";
         });
   }
-  
-
-  /**
-   * An example method querying a boolean state of the subsystem (for example, a digital sensor).
-   *
-   * @return value of some boolean subsystem state, such as a digital sensor.
-   */
-  public boolean exampleCondition() {
-    // Query some boolean state, such as a digital sensor.
-    return false;
-  }
 
   @Override
   public void periodic() {
     SmartDashboard.putBoolean("Position enabled", positionEnabled);
     SmartDashboard.putString("Position Selection", m_positionSelection);
-    //add code below
-  }
-
-  @Override
-  public void simulationPeriodic() {
-    // This method will be called once per scheduler run during simulation
   }
 }

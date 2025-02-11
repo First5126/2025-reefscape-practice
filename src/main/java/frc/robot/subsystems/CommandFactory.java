@@ -22,7 +22,6 @@ public class CommandFactory {
   private AlgaeRollers m_algaeRollers;
   private Climbing m_climbing;
   private LedLights m_ledLights;
-  
 
   public CommandFactory(
     CommandSwerveDrivetrain drivetrain,
