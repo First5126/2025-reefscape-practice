@@ -38,6 +38,7 @@ public class Elevator extends SubsystemBase {
     leftConfig.Feedback.SensorToMechanismRatio = 24.0;
     leftConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
     
+    
     m_leftMotor.getConfigurator().apply(leftConfig);
     m_rightMotor.getConfigurator().apply(rightConfig);
     m_rightMotor.setControl(new Follower(m_leftMotor.getDeviceID(), true));
