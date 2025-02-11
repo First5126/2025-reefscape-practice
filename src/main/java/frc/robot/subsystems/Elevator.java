@@ -16,18 +16,22 @@ import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.CANConstants;
+import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.ElevatorConstants.CoralLevels;
 
 public class Elevator extends SubsystemBase {
   private final TalonFX m_leftMotor = new TalonFX(CANConstants.LEFT_ELEVATOR_MOTOR);
   private final TalonFX m_rightMotor = new TalonFX(CANConstants.RIGHT_ELEVATOR_MOTOR);
   private final PositionVoltage m_PositionVoltage = new PositionVoltage(0).withSlot(0).withFeedForward(0);
-  private final VoltageOut m_VoltageOut = new VoltageOut(0);  
-
+  private final VoltageOut m_VoltageOut = new VoltageOut(0); 
+  private final DigitalInput m_forwardLimit = new DigitalInput(ElevatorConstants.ELEVATOR_FORWARD_LIMIT);
+  private final DigitalInput m_reverseLimit = new DigitalInput(ElevatorConstants.ELEVATOR_REVERSE_LIMIT);
+  
   public Elevator() {
     TalonFXConfiguration leftConfig = new TalonFXConfiguration();
     TalonFXConfiguration rightConfig = new TalonFXConfiguration();
