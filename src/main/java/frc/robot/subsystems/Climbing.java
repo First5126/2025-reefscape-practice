@@ -1,9 +1,11 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.HardwareLimitSwitchConfigs;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.ForwardLimitSourceValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -21,9 +23,22 @@ public class Climbing extends SubsystemBase {
   private final DigitalInput m_reverseLimit = new DigitalInput(ClimbingConstants.REVERSE_DIGITAL_LIMIT);
 
   public Climbing() {
+
+    HardwareLimitSwitchConfigs leftConfig = new HardwareLimitSwitchConfigs();
+    HardwareLimitSwitchConfigs rightConfig = new HardwareLimitSwitchConfigs();
+
+    leftConfig.ForwardLimitSource = ForwardLimitSourceValue.RemoteCANcoder;
+    leftConfig.ForwardLimitRemoteSensorID = ClimbingConstants.FORWARD_DIGITAL_LIMIT;
+
+    rightConfig.ForwardLimitSource = ForwardLimitSourceValue.RemoteCANcoder;
+    rightConfig.ForwardLimitRemoteSensorID = ClimbingConstants.FORWARD_DIGITAL_LIMIT;
+
     m_rightMotor.setControl(new Follower(m_leftMotor.getDeviceID(), true));
     m_leftMotor.setNeutralMode(NeutralModeValue.Brake);
     m_leftMotor.setControl(new DutyCycleOut(0));
+
+    m_leftMotor.getConfigurator().apply(leftConfig);
+    m_rightMotor.getConfigurator().apply(rightConfig);
   }
 
   public Command climb() {
@@ -35,6 +50,6 @@ public class Climbing extends SubsystemBase {
   }
 
   public void setPosition(double position){
-    m_leftMotor.setControl(m_positionVoltage.withPosition(0).withLimitForwardMotion(m_forwardLimit.get()).withLimitReverseMotion(m_reverseLimit.get()));
+    m_leftMotor.setControl(m_positionVoltage.withPosition(0).withLimitReverseMotion(m_reverseLimit.get()));
   }
 }
