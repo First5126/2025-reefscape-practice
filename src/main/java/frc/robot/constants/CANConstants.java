@@ -16,6 +16,6 @@ public class CANConstants {
   public static final int RIGHT_ELAVOTAR_MOTOR = 0;
   public static final int LEFT_ELAVOTAR_MOTOR = 1;
 
-  public static final int CORAL_PIVOT_ID = 0;
-  public static final int ALGAE_PIVOT_ID = 0;
+  public static final int CORAL_PIVOT = 0;
+  public static final int ALGAE_PIVOT = 0;
 }

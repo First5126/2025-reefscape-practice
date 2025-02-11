@@ -31,7 +31,7 @@ public class CoralPivot extends SubsystemBase {
     m_talonConfiguration.Slot0.kA = CoralPivotConstants.kA;
     m_talonConfiguration.Slot0.kV = CoralPivotConstants.kV;
     
-    m_CoralPivotTalon = new TalonFX(CANConstants.CORAL_PIVOT_ID);
+    m_CoralPivotTalon = new TalonFX(CANConstants.CORAL_PIVOT);
     m_CoralPivotTalon.getConfigurator().apply(m_talonConfiguration);
     m_CoralPivotTalon.setNeutralMode(NeutralModeValue.Brake);
   }
