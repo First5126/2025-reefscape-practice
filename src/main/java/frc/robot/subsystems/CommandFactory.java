@@ -24,6 +24,7 @@ public class CommandFactory {
   private Climbing m_climbing;
   private LedLights m_ledLights;
   private CoralPivot m_coralPivot;
+  private AlgaePivot m_algaePivot;
 
   public CommandFactory(
     CommandSwerveDrivetrain drivetrain,
@@ -32,7 +33,8 @@ public class CommandFactory {
     Elevator elevator,
     CoralRollers coralRollers,
     LedLights ledLights,
-    CoralPivot coralPivot
+    CoralPivot coralPivot,
+    AlgaePivot algaePivot
   ) {
     this.m_drivetrain = drivetrain;
     this.m_robotPoseSupplier = m_drivetrain::getPose2d;
@@ -42,6 +44,7 @@ public class CommandFactory {
     this.m_climbing = climbing;
     this.m_ledLights = ledLights;
     this.m_coralPivot = coralPivot;
+    this.m_algaePivot = algaePivot;
   }
 
   /*
@@ -71,5 +74,13 @@ public class CommandFactory {
     Command finishIntake = m_coralPivot.goToUpperSetpoint().alongWith(m_coralRollers.stopCommand());
 
     return pivotCoralRollers.alongWith(intakeCoral).until(m_coralRollers.getCoralTrigger()).andThen(finishIntake);
+  }
+
+  public Command algaePivotAndIntake() {
+    Command pivotAlgaeRollers = m_algaePivot.goToLowerSetpoint();
+    Command intakeAlgae = m_algaeRollers.feedIn();
+
+    Command finishIntake = m_algaePivot.goToUpperSetpoint().alongWith(m_algaeRollers.stop());
+    return pivotAlgaeRollers.alongWith(intakeAlgae).until(m_algaeRollers.hasGamePiece()).andThen(finishIntake);
   }
 }
