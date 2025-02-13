@@ -6,6 +6,7 @@ import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -22,6 +23,7 @@ public class CommandFactory {
   private AlgaeRollers m_algaeRollers;
   private Climbing m_climbing;
   private LedLights m_ledLights;
+  private CoralPivot m_coralPivot;
 
   public CommandFactory(
     CommandSwerveDrivetrain drivetrain,
@@ -29,7 +31,8 @@ public class CommandFactory {
     Climbing climbing,
     Elevator elevator,
     CoralRollers coralRollers,
-    LedLights ledLights
+    LedLights ledLights,
+    CoralPivot coralPivot
   ) {
     this.m_drivetrain = drivetrain;
     this.m_robotPoseSupplier = m_drivetrain::getPose2d;
@@ -38,6 +41,7 @@ public class CommandFactory {
     this.m_algaeRollers = algaeRollers;
     this.m_climbing = climbing;
     this.m_ledLights = ledLights;
+    this.m_coralPivot = coralPivot;
   }
 
   /*
@@ -59,5 +63,13 @@ public class CommandFactory {
     Command returnCommand = driveToReef.andThen(placeCoral);
     
     return returnCommand;
+  }
+
+  public Command coralPivotAndIntake() {
+    Command pivotCoralRollers = m_coralPivot.goToLowerSetpoint();
+    Command intakeCoral = m_coralRollers.rollInCommand();
+    Command finishIntake = m_coralPivot.goToUpperSetpoint().alongWith(m_coralRollers.stopCommand());
+
+    return pivotCoralRollers.alongWith(intakeCoral).until(m_coralRollers.getCoralTrigger()).andThen(finishIntake);
   }
 }
