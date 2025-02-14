@@ -57,4 +57,23 @@ public class AlgaePivot extends SubsystemBase {
                 setAlgaeSetpoint(setpoint);
             });
     }
-}
+
+    private void rotate(Angle setpoint) {
+        m_AlgaePivotTalon.setControl(positionVoltage.withPosition(setpoint));
+      }
+
+
+    public Command goToLowerSetpoint() {
+        return runOnce(
+          () -> {
+            rotate(AlgaePivotConstants.LOWER_ANGLE);
+          });
+      }
+      
+      public Command goToUpperSetpoint() {
+        return runOnce(
+          () -> {
+            rotate(AlgaePivotConstants.UPPER_ANGLE);
+          });
+        }
+    }
