@@ -91,7 +91,7 @@ public class Elevator extends SubsystemBase {
   }
 
   private boolean getIsAtPosition() {
-    return m_leftMotor.getPosition().getValue() == CoralLevels.values()[goalHeightIndex].heightAngle;
+    return m_leftMotor.getPosition().getValue() == CoralLevels.values()[m_goalHeightIndex].heightAngle;
   }
 
   //using exesting mPositionVoltage write set position method in meters
