@@ -1,10 +1,12 @@
 package frc.robot.subsystems;
+
 import static edu.wpi.first.units.Units.Meters;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -12,11 +14,6 @@ import frc.robot.constants.ElevatorConstants.CoralLevels;
 import frc.robot.constants.PoseConstants.Pose;
 
 
-
-
-/**
- * A factory class that creates composed commands across multiple subsystems
- */
 public class CommandFactory {
   
   private CommandSwerveDrivetrain m_drivetrain;
@@ -61,11 +58,9 @@ public class CommandFactory {
     
     return returnCommand;
   }
-/*
- * Moves the robot to a position and then runs the secondary commands
- */
+
   public Command driveAndPlaceCoral(Pose reefPose, CoralLevels level) {
-    Command raiseElevator = m_elevator.setPosition(level);
+    Command raiseElevator = m_elevator.goToCoralHeightPosition(level);
     Command driveToReef = moveToPositionWithDistance(reefPose.getPose(), level.distance, raiseElevator);
     Command placeCoral = m_coralRollers.rollOutCommand();
     Command returnCommand = driveToReef.andThen(placeCoral);
@@ -84,6 +79,7 @@ public class CommandFactory {
   public Command algaePivotAndIntake() {
     Command pivotAlgaeRollers = m_algaePivot.goToLowerSetpoint();
     Command intakeAlgae = m_algaeRollers.feedIn();
+
     Command finishIntake = m_algaePivot.goToUpperSetpoint().alongWith(m_algaeRollers.stopCommand());
     return pivotAlgaeRollers.alongWith(intakeAlgae).until(m_algaeRollers.hasGamePiece()).andThen(finishIntake);
   }
@@ -91,5 +87,4 @@ public class CommandFactory {
   public Command goToPose(Pose2d pose) {
     return m_drivetrain.goToPose(pose);
   }
-
 }
