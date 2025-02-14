@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Revolutions;
+
 import java.util.function.Supplier;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -16,11 +18,13 @@ import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.units.AngleUnit;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.CANConstants;
-
+import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.ElevatorConstants.CoralLevels;
 
 
@@ -29,6 +33,9 @@ public class Elevator extends SubsystemBase {
   private final TalonFX m_rightMotor = new TalonFX(CANConstants.RIGHT_ELAVOTAR_MOTOR);
   private final PositionVoltage m_PositionVoltage = new PositionVoltage(0).withSlot(0).withFeedForward(0);
   private final VoltageOut m_VoltageOut = new VoltageOut(0);  
+
+  // These fields are for when the driver taps up or down on the dpad. The elvator will go up or down a whole coral level
+  private int goalHeightIndex = 0;
 
   public Elevator() {
     TalonFXConfiguration leftConfig = new TalonFXConfiguration();
@@ -67,9 +74,34 @@ public class Elevator extends SubsystemBase {
     return run(() -> setSpeed(speed.get()));
   }
 
+  private void changeGoalHeightIndex(int change) {
+    goalHeightIndex += change;
+
+    if (goalHeightIndex<0) goalHeightIndex = 0;
+    if (goalHeightIndex>CoralLevels.values().length-1) goalHeightIndex = CoralLevels.values().length-1;
+    setPosition(CoralLevels.values()[goalHeightIndex]);
+  }
+
+  public Command lowerElvator() {
+    return runOnce(() -> changeGoalHeightIndex(-1)).until(this::getIsAtPosition);
+  }
+
+  public Command raiseElevator() {
+    return run(() -> changeGoalHeightIndex(1)).until(this::getIsAtPosition);
+  }
+
+  private boolean getIsAtPosition() {
+    return m_leftMotor.getPosition().getValue() == CoralLevels.values()[goalHeightIndex].heightAngle;
+  }
 
   //using exesting mPositionVoltage write set position method in meters
-  public Command setPosition(CoralLevels position){
-    return run(() -> setControl(m_PositionVoltage.withPosition(position.heightAngle)));
+  private void setPosition(CoralLevels position){
+    setControl(m_PositionVoltage.withPosition(position.heightAngle));
+  }
+
+  public Command goToCoralHeightPosition(CoralLevels position) {
+    return run(
+      ()-> setPosition(position)
+      );
   }
 }
