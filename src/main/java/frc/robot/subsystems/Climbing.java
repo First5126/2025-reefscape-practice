@@ -14,6 +14,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.CANConstants;
 import frc.robot.constants.ClimbingConstants;
 
+/**
+ * The Climbing subsystem is a simple mechanism that moves the robot up and down.
+ */
 public class Climbing extends SubsystemBase {
 
   private final TalonFX m_leftMotor = new TalonFX(CANConstants.LEFT_CLIMBING_MOTOR);
@@ -40,15 +43,23 @@ public class Climbing extends SubsystemBase {
     m_leftMotor.getConfigurator().apply(leftConfig);
     m_rightMotor.getConfigurator().apply(rightConfig);
   }
-
+/*
+ * This method sets the position of the climbing mechanism to the desired position
+ */
   public Command climb() {
     return run(() -> {setPosition(ClimbingConstants.ROTATIONS_FOR_CLIMB);});
   }
-
+/**
+ * This method sets the position of the climbing mechanism to 0
+ * @return
+ */
   public Command unClimb() {
     return run(() -> {setPosition(0);});
   }
-
+/**
+ * This method sets the position of the climbing mechanism to the desired position
+ * @param position
+ */
   public void setPosition(double position){
     m_leftMotor.setControl(m_positionVoltage.withPosition(0).withLimitReverseMotion(m_reverseLimit.get()));
   }

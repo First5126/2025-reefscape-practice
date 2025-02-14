@@ -19,7 +19,9 @@ public class CoralPivot extends SubsystemBase {
   private PositionVoltage positionVoltage = new PositionVoltage(0).withSlot(0);
   private TalonFXConfiguration m_talonConfiguration;
   private TalonFX m_CoralPivotTalon;
-
+/**
+ * The CoralPivot subsystem is a simple mechanism that rotates the arm of the robot.
+ */
   public CoralPivot() {    
     m_talonConfiguration = new TalonFXConfiguration();
     m_talonConfiguration.CurrentLimits.SupplyCurrentLimit = CoralPivotConstants.supplyCurrentLimit;
@@ -35,11 +37,17 @@ public class CoralPivot extends SubsystemBase {
     m_CoralPivotTalon.getConfigurator().apply(m_talonConfiguration);
     m_CoralPivotTalon.setNeutralMode(NeutralModeValue.Brake);
   }
-
+/**
+ * Rotates the arm of the robot to a setpoint.
+ */
   private void rotateArm(Angle setpoint) {
     m_CoralPivotTalon.setControl(positionVoltage.withPosition(setpoint));
   }
-
+/**
+ * Sets the arm
+ * @param position
+ * @return
+ */
   public Command setArmSetpoint(Angle position) {
     return runOnce(
       () -> {

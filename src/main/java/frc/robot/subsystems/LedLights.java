@@ -13,7 +13,9 @@ import frc.robot.Constants;
 import frc.robot.constants.CANConstants;
 
 
-
+/**
+ * The LedLights subsystem is a simple mechanism that controls the LEDs on the robot.
+ */
 public class LedLights extends SubsystemBase {
   private CANdle m_candle = new CANdle(CANConstants.CANDLE_ID, Constants.CANIVORE_BUS_NAME);
 

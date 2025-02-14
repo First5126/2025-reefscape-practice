@@ -91,7 +91,9 @@ public class RobotContainer {
     ));
     
     logger.telemeterize(m_drivetrain.getState());
-  }
+    m_driverController.y().whileTrue(Commands.run(() -> {})).and(m_driverController.povUp().whileTrue(Commands.run(() -> {}))).onTrue(Commands.runOnce(() -> m_drivetrain.(true)));
+    };
+  
     
   private void configureCoDriverControls() {
     // Setup codriver's controlls

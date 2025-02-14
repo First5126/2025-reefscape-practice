@@ -13,6 +13,11 @@ import frc.robot.constants.ElevatorConstants.CoralLevels;
 import frc.robot.constants.PoseConstants.Pose;
 
 
+
+
+/**
+ * A factory class that creates composed commands across multiple subsystems
+ */
 public class CommandFactory {
   
   private CommandSwerveDrivetrain m_drivetrain;
@@ -51,7 +56,9 @@ public class CommandFactory {
     
     return returnCommand;
   }
-
+/*
+ * Moves the robot to a position and then runs the secondary commands
+ */
   public Command driveAndPlaceCoral(Pose reefPose, CoralLevels level) {
     Command raiseElevator = m_elevator.setPosition(level);
     Command driveToReef = moveToPositionWithDistance(reefPose.getPose(), level.distance, raiseElevator);

@@ -9,6 +9,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.AlgaeConstants;
 import frc.robot.constants.CANConstants;
 
+/**
+ * The AlgaeRollers subsystem is a simple mechanism that intakes and outtakes game pieces.
+ */
 public class AlgaeRollers extends SubsystemBase {
   public TalonFX m_motorOne = new TalonFX(CANConstants.LEFT_ALGAE_MOTOR);
   public TalonFX m_motorTwo = new TalonFX(CANConstants.RIGHT_ALGAE_MOTOR);

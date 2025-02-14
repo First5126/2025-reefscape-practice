@@ -4,8 +4,6 @@
 
 package frc.robot.subsystems;
 
-import java.security.AlgorithmConstraints;
-
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.PositionVoltage;
@@ -18,6 +16,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.AlgaePivotConstants;
 import frc.robot.constants.CANConstants;
 
+/**
+ * The AlgaePivot subsystem is a simple mechanism that rotates the arm of the robot.
+ */
 public class AlgaePivot extends SubsystemBase {
     private Slot0Configs m_Slot0Configs;  
     private PositionVoltage positionVoltage = new PositionVoltage(0).withSlot(0);
@@ -43,11 +44,14 @@ public class AlgaePivot extends SubsystemBase {
         m_AlgaePivotTalon.getConfigurator().apply(m_TalonConfiguration);
     }
 
+  /*
+   * Sets the position of the arm of the robot to a setpoint.
+   */
     private void setAlgaeSetpoint(Angle setpoint) {
         m_AlgaePivotTalon.setControl(positionVoltage.withPosition(setpoint));
     }
 
-    public Command setAlgaeTalonSetpoint(Angle setpoint) {
+    public Command setAlgaeTalonSetpoint(Angle setpoint) {// setAlgaeTalonSetpoint is a method that sets the position of the arm of the robot to a setpoint.
         return runOnce(
             () -> {
                 setAlgaeSetpoint(setpoint);

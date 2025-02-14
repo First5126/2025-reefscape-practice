@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-
+/** The Record subsystem is a simple mechanism that records the position of the robot. */
 public class Record extends SubsystemBase {
 
   private String m_positionSelection = "";

@@ -23,7 +23,9 @@ import frc.robot.constants.CANConstants;
 
 import frc.robot.constants.ElevatorConstants.CoralLevels;
 
-
+/**
+ * The Elevator subsystem is a simple mechanism that moves the elevator up and down.
+ */
 public class Elevator extends SubsystemBase {
   private final TalonFX m_leftMotor = new TalonFX(CANConstants.LEFT_ELAVOTAR_MOTOR);
   private final TalonFX m_rightMotor = new TalonFX(CANConstants.RIGHT_ELAVOTAR_MOTOR);
@@ -45,7 +47,9 @@ public class Elevator extends SubsystemBase {
     m_rightMotor.setControl(new Follower(m_leftMotor.getDeviceID(), true));
     m_leftMotor.setControl(m_VoltageOut.withOutput(0));
   }
-
+/*
+ * This method sets the position of the elevator Height, the equation is set up to convert the position of the motor to the height of the elevator
+ */
   public double getElevatorHeight(){
     return m_leftMotor.getPosition().getValueAsDouble() / 24.0 * 2.0 * Math.PI * 0.05;//24:1 gear ratio, 2" diameter pulley
   }
@@ -54,15 +58,21 @@ public class Elevator extends SubsystemBase {
   public void periodic() {
     SmartDashboard.putNumber("Elevator Height: ", getElevatorHeight());
   }
-
+/*
+ * This method sets the speed of the elevator motor
+ */
   private void setSpeed(double speed){
     setControl(m_VoltageOut.withOutput(speed * 12.0));
   }
-
+/*
+ * This method sets the control of the elevator motor.
+ */
   private void setControl(ControlRequest control){
     m_leftMotor.setControl(control);
   }
-
+/*
+ * This method sets the speed of the elevator motor
+ */
   public Command openLoopCommand(Supplier<Double> speed) {
     return run(() -> setSpeed(speed.get()));
   }
