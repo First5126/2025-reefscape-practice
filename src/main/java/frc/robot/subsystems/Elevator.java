@@ -82,7 +82,7 @@ public class Elevator extends SubsystemBase {
     setPosition(CoralLevels.values()[goalHeightIndex]);
   }
 
-  public Command lowerElvator() {
+  public Command lowerElevator() {
     return runOnce(() -> changeGoalHeightIndex(-1)).until(this::getIsAtPosition);
   }
 
