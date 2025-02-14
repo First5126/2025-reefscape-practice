@@ -24,6 +24,7 @@ import frc.robot.constants.AprilTagLocalizationConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.AlgaePivot;
 import frc.robot.subsystems.AlgaeRollers;
+import frc.robot.subsystems.AprilTagRecognition;
 import frc.robot.subsystems.Climbing;
 import frc.robot.subsystems.CommandFactory;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -97,6 +98,8 @@ public class RobotContainer {
   m_driverController.rightBumper().whileTrue(m_algaeRollers.feedOut()).onFalse(m_algaeRollers.stopCommand());
   m_driverController.leftBumper().and(m_driverController.b()).whileTrue(m_coralRollers.rollInCommand()).onFalse(m_coralRollers.stopCommand());
   m_driverController.rightBumper().and(m_driverController.b()).whileTrue(m_coralRollers.rollOutCommand()).onFalse(m_coralRollers.stopCommand());
+
+  m_driverController.x().whileTrue(m_aprilTagRecognition.getAprilTagCommand());
   };
   
     

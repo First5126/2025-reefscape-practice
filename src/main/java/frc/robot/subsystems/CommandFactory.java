@@ -87,4 +87,8 @@ public class CommandFactory {
     Command finishIntake = m_algaePivot.goToUpperSetpoint().alongWith(m_algaeRollers.stopCommand());
     return pivotAlgaeRollers.alongWith(intakeAlgae).until(m_algaeRollers.hasGamePiece()).andThen(finishIntake);
   }
+
+  public Command goToPose(Pose2d pose) {
+    return m_drivetrain.goToPose(pose);
+  }
 }
