@@ -31,6 +31,7 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.LedLights;
 import frc.robot.subsystems.AlgaePivot;
 import frc.robot.subsystems.AlgaeRollers;
+import frc.robot.subsystems.AprilTagRecognition;
 import frc.robot.subsystems.Climbing;
 import frc.robot.subsystems.CommandFactory;
 import frc.robot.vision.AprilTagLocalization;
@@ -73,6 +74,7 @@ public class RobotContainer {
   private final AlgaePivot m_algaePivot = new AlgaePivot(); 
   private final SendableChooser<Command> autoChooser = AutoBuilder.buildAutoChooser();
   private final CommandFactory m_commandFactory = new CommandFactory(m_drivetrain, m_algaeRollers, m_climbing, m_elevator, m_coralRollers, m_ledLights, m_coralPivot, m_algaePivot); 
+  private final AprilTagRecognition m_aprilTagRecognition = new AprilTagRecognition(m_commandFactory);
 
 
   public RobotContainer() {
@@ -95,6 +97,8 @@ public class RobotContainer {
     ));
     
     logger.telemeterize(m_drivetrain.getState());
+
+    m_driverController.x().onTrue(m_aprilTagRecognition.getAprilTagCommand());
   }
     
   private void configureCoDriverControls() {
