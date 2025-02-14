@@ -8,10 +8,10 @@ import edu.wpi.first.units.measure.Distance;
 
 public class ElevatorConstants {
     public static enum CoralLevels {
-        L1(2,1),
-        L2(4,1),
-        L3(6,1),
-        L4(8,1);
+        L1(0,1),
+        L2(0.5,1),
+        L3(1,1),
+        L4(1.5,1);
 
         // Height of the elevator expressed in Revolutions.
         public final Angle heightAngle;
@@ -26,5 +26,17 @@ public class ElevatorConstants {
     public static final double ELEVATOR_SPEED = 0.75;
     public static final double ELEVATOR_MAX_HEIGHT = 2.0; // in meters
     public static final double ELEVATOR_MIN_HEIGHT = 0.0; // in meters
-    public static final double ELEVATOR_TOLERANCE = 0.01; // in meters    
+    public static final double ELEVATOR_TOLERANCE = 0.01; // in meters  
+    
+    public static final double kP = 0.6;
+    public static final double kI = 0;
+    public static final double kD = 0;
+    public static final double kV = 0;
+    public static final double kS = 0;
+    public static final double kG = 0;
+
+    public static final int FORWARD_DIGITAL_LIMIT = 0;
+    public static final int REVERSE_DIGITAL_LIMIT = 0;
+
+    public static final double GEAR_RATIO = 12.0;
 }
