@@ -23,35 +23,34 @@ import frc.robot.vision.LimelightHelpers.RawFiducial;
 public class AprilTagRecognition extends SubsystemBase {
   private HashMap<Integer, Command> m_AprilTagHashMap;
   private CommandFactory m_commandFactory;
-  private int currentAprilID = 0;
-  private Command currentCommand;
+  private int m_currentAprilID = 0;
 
   public AprilTagRecognition(CommandFactory commandFactory) {
     m_commandFactory = commandFactory;
     m_AprilTagHashMap = new HashMap<>(23);
     m_AprilTagHashMap.put(0, Commands.none());
-    m_AprilTagHashMap.put(ApriltagConstants.Red.LEFT_CORAL_STATION.id, m_commandFactory.goToCommand(PoseConstants.leftCoralStationPosition2.getPose()));
-    m_AprilTagHashMap.put(ApriltagConstants.Red.RIGHT_CORAL_STATION.id, m_commandFactory.goToCommand(PoseConstants.rightCoralStationPosition2.getPose()));
-    m_AprilTagHashMap.put(ApriltagConstants.Red.PROCESSOR.id, m_commandFactory.goToCommand(PoseConstants.prossesor.getPose()));
-    m_AprilTagHashMap.put(ApriltagConstants.Red.LEFT_BARGE.id, m_commandFactory.goToCommand(PoseConstants.LeftBarge.getPose()));
-    m_AprilTagHashMap.put(ApriltagConstants.Red.RIGHT_BARGE.id, m_commandFactory.goToCommand(PoseConstants.rightBarge.getPose()));
-    m_AprilTagHashMap.put(ApriltagConstants.Red.REEF_1.id, m_commandFactory.goToCommand(PoseConstants.ReefPosition1.getPose()));
-    m_AprilTagHashMap.put(ApriltagConstants.Red.REEF_2.id, m_commandFactory.goToCommand(PoseConstants.ReefPosition2.getPose()));
-    m_AprilTagHashMap.put(ApriltagConstants.Red.REEF_3.id, m_commandFactory.goToCommand(PoseConstants.ReefPosition3.getPose()));
-    m_AprilTagHashMap.put(ApriltagConstants.Red.REEF_4.id, m_commandFactory.goToCommand(PoseConstants.ReefPosition4.getPose()));
-    m_AprilTagHashMap.put(ApriltagConstants.Red.REEF_5.id, m_commandFactory.goToCommand(PoseConstants.ReefPosition5.getPose()));
-    m_AprilTagHashMap.put(ApriltagConstants.Red.REEF_6.id, m_commandFactory.goToCommand(PoseConstants.ReefPosition6.getPose()));
-    m_AprilTagHashMap.put(ApriltagConstants.Blue.LEFT_CORAL_STATION.id, m_commandFactory.goToCommand(PoseConstants.leftCoralStationPosition2.getPose()));
-    m_AprilTagHashMap.put(ApriltagConstants.Blue.RIGHT_CORAL_STATION.id, m_commandFactory.goToCommand(PoseConstants.rightCoralStationPosition2.getPose()));
-    m_AprilTagHashMap.put(ApriltagConstants.Blue.PROCESSOR.id, m_commandFactory.goToCommand(PoseConstants.prossesor.getPose()));
-    m_AprilTagHashMap.put(ApriltagConstants.Blue.LEFT_BARGE.id, m_commandFactory.goToCommand(PoseConstants.LeftBarge.getPose()));
-    m_AprilTagHashMap.put(ApriltagConstants.Blue.RIGHT_BARGE.id, m_commandFactory.goToCommand(PoseConstants.rightBarge.getPose()));
-    m_AprilTagHashMap.put(ApriltagConstants.Blue.REEF_1.id, m_commandFactory.goToCommand(PoseConstants.ReefPosition1.getPose()));
-    m_AprilTagHashMap.put(ApriltagConstants.Blue.REEF_2.id, m_commandFactory.goToCommand(PoseConstants.ReefPosition2.getPose()));
-    m_AprilTagHashMap.put(ApriltagConstants.Blue.REEF_3.id, m_commandFactory.goToCommand(PoseConstants.ReefPosition3.getPose()));
-    m_AprilTagHashMap.put(ApriltagConstants.Blue.REEF_4.id, m_commandFactory.goToCommand(PoseConstants.ReefPosition4.getPose()));
-    m_AprilTagHashMap.put(ApriltagConstants.Blue.REEF_5.id, m_commandFactory.goToCommand(PoseConstants.ReefPosition5.getPose()));
-    m_AprilTagHashMap.put(ApriltagConstants.Blue.REEF_6.id, m_commandFactory.goToCommand(PoseConstants.ReefPosition6.getPose()));
+    m_AprilTagHashMap.put(ApriltagConstants.Red.LEFT_CORAL_STATION.id, m_commandFactory.goToPose(PoseConstants.leftCoralStationPosition2.getPose()));
+    m_AprilTagHashMap.put(ApriltagConstants.Red.RIGHT_CORAL_STATION.id, m_commandFactory.goToPose(PoseConstants.rightCoralStationPosition2.getPose()));
+    m_AprilTagHashMap.put(ApriltagConstants.Red.PROCESSOR.id, m_commandFactory.goToPose(PoseConstants.prossesor.getPose()));
+    m_AprilTagHashMap.put(ApriltagConstants.Red.LEFT_BARGE.id, m_commandFactory.goToPose(PoseConstants.LeftBarge.getPose()));
+    m_AprilTagHashMap.put(ApriltagConstants.Red.RIGHT_BARGE.id, m_commandFactory.goToPose(PoseConstants.rightBarge.getPose()));
+    m_AprilTagHashMap.put(ApriltagConstants.Red.REEF_1.id, m_commandFactory.goToPose(PoseConstants.ReefPosition1.getPose()));
+    m_AprilTagHashMap.put(ApriltagConstants.Red.REEF_2.id, m_commandFactory.goToPose(PoseConstants.ReefPosition2.getPose()));
+    m_AprilTagHashMap.put(ApriltagConstants.Red.REEF_3.id, m_commandFactory.goToPose(PoseConstants.ReefPosition3.getPose()));
+    m_AprilTagHashMap.put(ApriltagConstants.Red.REEF_4.id, m_commandFactory.goToPose(PoseConstants.ReefPosition4.getPose()));
+    m_AprilTagHashMap.put(ApriltagConstants.Red.REEF_5.id, m_commandFactory.goToPose(PoseConstants.ReefPosition5.getPose()));
+    m_AprilTagHashMap.put(ApriltagConstants.Red.REEF_6.id, m_commandFactory.goToPose(PoseConstants.ReefPosition6.getPose()));
+    m_AprilTagHashMap.put(ApriltagConstants.Blue.LEFT_CORAL_STATION.id, m_commandFactory.goToPose(PoseConstants.leftCoralStationPosition2.getPose()));
+    m_AprilTagHashMap.put(ApriltagConstants.Blue.RIGHT_CORAL_STATION.id, m_commandFactory.goToPose(PoseConstants.rightCoralStationPosition2.getPose()));
+    m_AprilTagHashMap.put(ApriltagConstants.Blue.PROCESSOR.id, m_commandFactory.goToPose(PoseConstants.prossesor.getPose()));
+    m_AprilTagHashMap.put(ApriltagConstants.Blue.LEFT_BARGE.id, m_commandFactory.goToPose(PoseConstants.LeftBarge.getPose()));
+    m_AprilTagHashMap.put(ApriltagConstants.Blue.RIGHT_BARGE.id, m_commandFactory.goToPose(PoseConstants.rightBarge.getPose()));
+    m_AprilTagHashMap.put(ApriltagConstants.Blue.REEF_1.id, m_commandFactory.goToPose(PoseConstants.ReefPosition1.getPose()));
+    m_AprilTagHashMap.put(ApriltagConstants.Blue.REEF_2.id, m_commandFactory.goToPose(PoseConstants.ReefPosition2.getPose()));
+    m_AprilTagHashMap.put(ApriltagConstants.Blue.REEF_3.id, m_commandFactory.goToPose(PoseConstants.ReefPosition3.getPose()));
+    m_AprilTagHashMap.put(ApriltagConstants.Blue.REEF_4.id, m_commandFactory.goToPose(PoseConstants.ReefPosition4.getPose()));
+    m_AprilTagHashMap.put(ApriltagConstants.Blue.REEF_5.id, m_commandFactory.goToPose(PoseConstants.ReefPosition5.getPose()));
+    m_AprilTagHashMap.put(ApriltagConstants.Blue.REEF_6.id, m_commandFactory.goToPose(PoseConstants.ReefPosition6.getPose()));
   }
 
 
@@ -73,12 +72,12 @@ public class AprilTagRecognition extends SubsystemBase {
   public Command getAprilTagCommand() {
     //TODO: make sure this works
     Command tagCommand = Commands.select(m_AprilTagHashMap, this::getClosestTagId);
-    currentAprilID = this.getClosestTagId();
+    m_currentAprilID = this.getClosestTagId();
     return tagCommand;
   }
 
 
   public void periodic() {
-    SmartDashboard.putNumber("Current April Tag Command ID", currentAprilID);
+    SmartDashboard.putNumber("Current April Tag Command ID", m_currentAprilID);
   }
 }
