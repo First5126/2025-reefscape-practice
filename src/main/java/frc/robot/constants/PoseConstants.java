@@ -21,6 +21,8 @@ public class PoseConstants {
     }
   }
   
+  //TODO: None of these positions are true. They were all in testing and will NOT WORK AT ALL.
+
   //tag numbers 1 and 13
   public static final Pose leftCoralStationPosition1 = new Pose(
     new Pose2d(1.7,7.3,Rotation2d.fromDegrees(125)),

@@ -2,7 +2,7 @@ package frc.robot.constants;
 
 // https://firstfrc.blob.core.windows.net/frc2025/FieldAssets/Apriltag_Images_and_User_Guide.pdf
 public final class ApriltagConstants {
-  enum Blue {
+  public enum Blue {
     LEFT_CORAL_STATION(13),
     RIGHT_CORAL_STATION(12),
     PROCESSOR(16),
@@ -21,7 +21,7 @@ public final class ApriltagConstants {
       this.id = id;
     }
   }
-  enum Red {
+  public enum Red {
     LEFT_CORAL_STATION(1),
     RIGHT_CORAL_STATION(2),
     PROCESSOR(3),

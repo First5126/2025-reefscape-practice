@@ -98,7 +98,7 @@ public class RobotContainer {
     
     logger.telemeterize(m_drivetrain.getState());
 
-    m_driverController.x().onTrue(m_aprilTagRecognition.getAprilTagCommand());
+    m_driverController.x().whileTrue(m_aprilTagRecognition.getAprilTagCommand());
   }
     
   private void configureCoDriverControls() {
