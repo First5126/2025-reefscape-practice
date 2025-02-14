@@ -111,7 +111,6 @@ public class Elevator extends SubsystemBase {
     if (m_goalHeightIndex<0) m_goalHeightIndex = 0;
     if (m_goalHeightIndex>CoralLevels.values().length-1) m_goalHeightIndex = CoralLevels.values().length-1;
     setPosition(CoralLevels.values()[m_goalHeightIndex]);
-    System.out.println(m_goalHeightIndex);
   }
 
   public Command lowerElevator() {
