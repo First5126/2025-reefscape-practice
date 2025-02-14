@@ -69,6 +69,7 @@ public class RobotContainer {
   private final AlgaePivot m_algaePivot = new AlgaePivot();
   private final SendableChooser<Command> autoChooser = AutoBuilder.buildAutoChooser();
   private final CommandFactory m_commandFactory = new CommandFactory(m_drivetrain, m_algaeRollers, m_climbing, m_elevator, m_coralRollers, m_ledLights, m_coralPivot, m_algaePivot); 
+  private final AprilTagRecognition m_aprilTagRecognition = new AprilTagRecognition(m_commandFactory);
 
 
   public RobotContainer() {
