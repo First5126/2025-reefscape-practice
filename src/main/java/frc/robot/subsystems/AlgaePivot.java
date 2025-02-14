@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.CANdiConfiguration;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.PositionVoltage;
@@ -24,6 +25,7 @@ public class AlgaePivot extends SubsystemBase {
     private PositionVoltage positionVoltage = new PositionVoltage(0).withSlot(0);
     private TalonFX m_AlgaePivotTalon;
     private TalonFXConfiguration m_TalonConfiguration;
+    private CANdiConfiguration m_CANDiConfiguration;
 
     public AlgaePivot() {
         m_Slot0Configs = new Slot0Configs();

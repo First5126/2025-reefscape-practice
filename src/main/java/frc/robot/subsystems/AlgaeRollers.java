@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.CANdiConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -18,7 +19,7 @@ public class AlgaeRollers extends SubsystemBase {
   private TalonFX m_motorTwo = new TalonFX(CANConstants.RIGHT_ALGAE_MOTOR);
 
   private Trigger m_hasGamePiece;
-
+  private CANdiConfiguration m_CANDiConfiguration;
   private VelocityVoltage m_velocityVoltage = new VelocityVoltage(0);
 
   public AlgaeRollers() {

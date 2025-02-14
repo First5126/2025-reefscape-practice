@@ -11,6 +11,7 @@ import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
+import com.ctre.phoenix6.hardware.CANdi;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -31,6 +32,7 @@ public class Elevator extends SubsystemBase {
   private final TalonFX m_rightMotor = new TalonFX(CANConstants.RIGHT_ELAVOTAR_MOTOR);
   private final PositionVoltage m_PositionVoltage = new PositionVoltage(0).withSlot(0).withFeedForward(0);
   private final VoltageOut m_VoltageOut = new VoltageOut(0);  
+  private final CANdi m_CANDi = new CANdi(0);
 
   public Elevator() {
     TalonFXConfiguration leftConfig = new TalonFXConfiguration();
