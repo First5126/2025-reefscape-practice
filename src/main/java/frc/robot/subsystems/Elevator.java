@@ -46,7 +46,7 @@ public class Elevator extends SubsystemBase {
   private final Slot0Configs m_slot0Configs = new Slot0Configs();
 
   // These fields are for when the driver taps up or down on the dpad. The elvator will go up or down a whole coral level
-  private int goalHeightIndex = 0;
+  private int m_goalHeightIndex = 0;
 
   public Elevator() {
     m_leftMotor.setPosition(0);
@@ -109,11 +109,11 @@ public class Elevator extends SubsystemBase {
   }
 
   private void changeGoalHeightIndex(int change) {
-    goalHeightIndex += change;
+    m_goalHeightIndex += change;
 
-    if (goalHeightIndex<0) goalHeightIndex = 0;
-    if (goalHeightIndex>CoralLevels.values().length-1) goalHeightIndex = CoralLevels.values().length-1;
-    setPosition(CoralLevels.values()[goalHeightIndex]);
+    if (m_goalHeightIndex<0) m_goalHeightIndex = 0;
+    if (m_goalHeightIndex>CoralLevels.values().length-1) m_goalHeightIndex = CoralLevels.values().length-1;
+    setPosition(CoralLevels.values()[m_goalHeightIndex]);
   }
 
   public Command lowerElevator() {
@@ -133,7 +133,7 @@ public class Elevator extends SubsystemBase {
   }
 
   private boolean getIsAtPosition() {
-    return m_leftMotor.getPosition().getValue() == CoralLevels.values()[goalHeightIndex].heightAngle;
+    return m_leftMotor.getPosition().getValue() == CoralLevels.values()[m_goalHeightIndex].heightAngle;
   }
 
   //using exesting mPositionVoltage write set position method in meters
