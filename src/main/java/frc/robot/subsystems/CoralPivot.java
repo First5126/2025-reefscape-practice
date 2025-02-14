@@ -24,8 +24,8 @@ public class CoralPivot extends SubsystemBase {
  */
   public CoralPivot() {    
     m_talonConfiguration = new TalonFXConfiguration();
-     m_talonConfiguration.CurrentLimits.SupplyCurrentLimit = CoralPivotConstants.supplyCurrentLimit;
-     m_talonConfiguration.CurrentLimits.SupplyCurrentLowerLimit = CoralPivotConstants.lowerSupplyCurrentLimit;
+     m_talonConfiguration.CurrentLimits.SupplyCurrentLimit = CoralPivotConstants.SupplyCurrentLimit;
+     m_talonConfiguration.CurrentLimits.SupplyCurrentLowerLimit = CoralPivotConstants.LowerSupplyCurrentLimit;
      m_talonConfiguration.Slot0.kP = CoralPivotConstants.kP;
      m_talonConfiguration.Slot0.kI = CoralPivotConstants.kI;
      m_talonConfiguration.Slot0.kD = CoralPivotConstants.kD;
