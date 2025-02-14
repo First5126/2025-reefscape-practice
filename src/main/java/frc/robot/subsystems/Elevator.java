@@ -51,7 +51,7 @@ public class Elevator extends SubsystemBase {
  * This method sets the position of the elevator Height, the equation is set up to convert the position of the motor to the height of the elevator
  */
   public double getElevatorHeight(){
-    return m_leftMotor.getPosition().getValueAsDouble() / 24.0 * 2.0 * Math.PI * 0.05;//24:1 gear ratio, 2" diameter pulley
+    return m_leftMotor.getPosition().getValueAsDouble() / 24.0 * 2.0 * Math.PI * 0.05; //12:1 gear ratio, 2" diameter pulley
   }
 
   @Override

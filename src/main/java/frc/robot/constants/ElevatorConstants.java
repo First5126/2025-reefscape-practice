@@ -9,7 +9,7 @@ import edu.wpi.first.units.measure.Distance;
 public class ElevatorConstants {
     public static enum CoralLevels {
         L1(2,1),
-        L2(4,1),
+        L2(4,1), 
         L3(6,1),
         L4(8,1);
 
