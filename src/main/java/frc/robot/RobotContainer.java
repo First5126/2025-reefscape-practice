@@ -24,10 +24,12 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.constants.AprilTagLocalizationConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.CoralPivot;
 import frc.robot.subsystems.CoralRollers;
 import frc.robot.subsystems.Elevator;
 
 import frc.robot.subsystems.LedLights;
+import frc.robot.subsystems.AlgaePivot;
 import frc.robot.subsystems.AlgaeRollers;
 import frc.robot.subsystems.Climbing;
 import frc.robot.subsystems.CommandFactory;
@@ -67,8 +69,10 @@ public class RobotContainer {
   private final Climbing m_climbing = new Climbing();
   private final AlgaeRollers m_algaeRollers = new AlgaeRollers();
   private final CoralRollers m_coralRollers = new CoralRollers(); 
+  private final CoralPivot m_coralPivot = new CoralPivot(); 
+  private final AlgaePivot m_algaePivot = new AlgaePivot(); 
   private final SendableChooser<Command> autoChooser = AutoBuilder.buildAutoChooser();
-  private final CommandFactory m_commandFactory = new CommandFactory(m_drivetrain, m_algaeRollers, m_climbing, m_elevator, m_coralRollers, m_ledLights); 
+  private final CommandFactory m_commandFactory = new CommandFactory(m_drivetrain, m_algaeRollers, m_climbing, m_elevator, m_coralRollers, m_ledLights, m_coralPivot, m_algaePivot); 
 
 
   public RobotContainer() {

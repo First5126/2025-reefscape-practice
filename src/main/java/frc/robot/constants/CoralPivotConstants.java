@@ -1,5 +1,8 @@
 package frc.robot.constants;
 
+import static edu.wpi.first.units.Units.Degrees;
+import edu.wpi.first.units.measure.Angle;
+
 public final class CoralPivotConstants {
     public static final double kP = 0; // Proportional constant
     public static final double kI = 0; // Integral constant

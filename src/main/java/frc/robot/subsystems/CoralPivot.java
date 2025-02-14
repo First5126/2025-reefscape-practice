@@ -24,25 +24,22 @@ public class CoralPivot extends SubsystemBase {
  */
   public CoralPivot() {    
     m_talonConfiguration = new TalonFXConfiguration();
-    m_talonConfiguration.CurrentLimits.SupplyCurrentLimit = CoralPivotConstants.supplyCurrentLimit;
-    m_talonConfiguration.CurrentLimits.SupplyCurrentLowerLimit = CoralPivotConstants.lowerSupplyCurrentLimit;
-    m_talonConfiguration.Slot0.kP = CoralPivotConstants.kP;
-    m_talonConfiguration.Slot0.kI = CoralPivotConstants.kI;
-    m_talonConfiguration.Slot0.kD = CoralPivotConstants.kD;
-    m_talonConfiguration.Slot0.kG = CoralPivotConstants.kG;
-    m_talonConfiguration.Slot0.kA = CoralPivotConstants.kA;
-    m_talonConfiguration.Slot0.kV = CoralPivotConstants.kV;
+     m_talonConfiguration.CurrentLimits.SupplyCurrentLimit = CoralPivotConstants.supplyCurrentLimit;
+     m_talonConfiguration.CurrentLimits.SupplyCurrentLowerLimit = CoralPivotConstants.lowerSupplyCurrentLimit;
+     m_talonConfiguration.Slot0.kP = CoralPivotConstants.kP;
+     m_talonConfiguration.Slot0.kI = CoralPivotConstants.kI;
+     m_talonConfiguration.Slot0.kD = CoralPivotConstants.kD;
+     m_talonConfiguration.Slot0.kG = CoralPivotConstants.kG;
+     m_talonConfiguration.Slot0.kA = CoralPivotConstants.kA;
+     m_talonConfiguration.Slot0.kV = CoralPivotConstants.kV;
     
     m_CoralPivotTalon = new TalonFX(CANConstants.CORAL_PIVOT);
-    m_CoralPivotTalon.getConfigurator().apply(m_talonConfiguration);
-    m_CoralPivotTalon.setNeutralMode(NeutralModeValue.Brake);
+     m_CoralPivotTalon.getConfigurator().apply(m_talonConfiguration);
+     m_CoralPivotTalon.setNeutralMode(NeutralModeValue.Brake);
   }
 /**
  * Rotates the arm of the robot to a setpoint.
  */
-  private void rotateArm(Angle setpoint) {
-    m_CoralPivotTalon.setControl(positionVoltage.withPosition(setpoint));
-  }
 /**
  * Sets the arm
  * @param position
@@ -51,7 +48,25 @@ public class CoralPivot extends SubsystemBase {
   public Command setArmSetpoint(Angle position) {
     return runOnce(
       () -> {
-        rotateArm(position);
+        rotate(CoralPivotConstants.UPPER_ANGLE);
       });
   }
-}
+
+  private void rotate(Angle setpoint) {
+    m_CoralPivotTalon.setControl(positionVoltage.withPosition(setpoint));
+  }
+
+  public Command goToLowerSetpoint() {
+    return runOnce(
+      () -> {
+        rotate(CoralPivotConstants.LOWER_ANGLE);
+      });
+  }
+
+  public Command goToUpperSetpoint() {
+    return runOnce(
+      () -> {
+        rotate(CoralPivotConstants.UPPER_ANGLE);
+      });
+  }
+  }
