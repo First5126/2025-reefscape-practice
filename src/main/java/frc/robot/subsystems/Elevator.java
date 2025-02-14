@@ -35,7 +35,7 @@ public class Elevator extends SubsystemBase {
   private final VoltageOut m_VoltageOut = new VoltageOut(0);  
 
   // These fields are for when the driver taps up or down on the dpad. The elvator will go up or down a whole coral level
-  private int goalHeightIndex = 0;
+  private int m_goalHeightIndex = 0;
 
   public Elevator() {
     TalonFXConfiguration leftConfig = new TalonFXConfiguration();
@@ -75,11 +75,11 @@ public class Elevator extends SubsystemBase {
   }
 
   private void changeGoalHeightIndex(int change) {
-    goalHeightIndex += change;
+    m_goalHeightIndex += change;
 
-    if (goalHeightIndex<0) goalHeightIndex = 0;
-    if (goalHeightIndex>CoralLevels.values().length-1) goalHeightIndex = CoralLevels.values().length-1;
-    setPosition(CoralLevels.values()[goalHeightIndex]);
+    if (m_goalHeightIndex<0) m_goalHeightIndex = 0;
+    if (m_goalHeightIndex>CoralLevels.values().length-1) m_goalHeightIndex = CoralLevels.values().length-1;
+    setPosition(CoralLevels.values()[m_goalHeightIndex]);
   }
 
   public Command lowerElevator() {
