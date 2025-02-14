@@ -49,7 +49,7 @@ public class AlgaeRollers extends SubsystemBase {
         });
   }
 
-  public Command stop() {
+  public Command stopCommand() {
     return runOnce(
         () -> {
           m_motorOne.setControl(m_velocityVoltage.withVelocity(0.0));

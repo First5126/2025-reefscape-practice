@@ -91,8 +91,12 @@ public class RobotContainer {
     ));
     
     logger.telemeterize(m_drivetrain.getState());
-    m_driverController.leftBumper().whileTrue(Commands.run(() -> {}));
-    };
+
+  m_driverController.leftBumper().whileTrue(m_algaeRollers.feedIn()).onFalse(m_algaeRollers.stopCommand());
+  m_driverController.rightBumper().whileTrue(m_algaeRollers.feedOut()).onFalse(m_algaeRollers.stopCommand());
+  m_driverController.leftBumper().and(m_driverController.b()).whileTrue(m_coralRollers.rollInCommand()).onFalse(m_coralRollers.stopCommand());
+  m_driverController.rightBumper().and(m_driverController.b()).whileTrue(m_coralRollers.rollOutCommand()).onFalse(m_coralRollers.stopCommand());
+  };
   
     
   private void configureCoDriverControls() {

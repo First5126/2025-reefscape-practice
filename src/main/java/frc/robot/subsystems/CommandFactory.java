@@ -86,8 +86,7 @@ public class CommandFactory {
   public Command algaePivotAndIntake() {
     Command pivotAlgaeRollers = m_algaePivot.goToLowerSetpoint();
     Command intakeAlgae = m_algaeRollers.feedIn();
-
-    Command finishIntake = m_algaePivot.goToUpperSetpoint().alongWith(m_algaeRollers.stop());
+    Command finishIntake = m_algaePivot.goToUpperSetpoint().alongWith(m_algaeRollers.stopCommand());
     return pivotAlgaeRollers.alongWith(intakeAlgae).until(m_algaeRollers.hasGamePiece()).andThen(finishIntake);
   }
 }
