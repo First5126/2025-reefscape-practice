@@ -7,15 +7,19 @@ package frc.robot;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
+import static edu.wpi.first.units.Units.Seconds;
 
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.AutoBuilder;
 
+import edu.wpi.first.units.measure.Time;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.event.BooleanEvent;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.constants.AprilTagLocalizationConstants;
 import frc.robot.generated.TunerConstants;
@@ -97,7 +101,7 @@ public class RobotContainer {
     ));
 
     m_driverController.povUp().and(this::yNotPressed).toggleOnTrue(m_elevator.raiseElevator());
-    m_driverController.povDown().and(this::yNotPressed).onTrue(m_elevator.lowerElvator());
+    m_driverController.povDown().and(this::yNotPressed).onTrue(m_elevator.lowerElevator());
     
     logger.telemeterize(m_drivetrain.getState());
 
@@ -105,7 +109,23 @@ public class RobotContainer {
   }
     
   private void configureCoDriverControls() {
+    // Setup codriver's controlls
+    m_coDriverController.a().whileTrue(m_coralRollers.rollInCommand()).onFalse(m_coralRollers.stopCommand());
+    m_coDriverController.b().whileTrue(m_coralRollers.rollInCommand()).onFalse(m_coralRollers.stopCommand());
+    m_coralRollers.getCoralTrigger().onTrue(rumbleCommand(m_coDriverController, RumbleType.kBothRumble, 1.0, Seconds.of(0.5)));
+  }
 
+  private Command rumbleCommand(CommandXboxController xboxController, RumbleType rumbleType, double rumbleStrength, Time rumbleTime) {
+    Command wait = Commands.waitTime(rumbleTime);
+    Command stopRumble = Commands.runOnce(
+      () -> {xboxController.setRumble(rumbleType, 0.0);}
+    );
+
+    return Commands.runOnce(
+      () -> {
+        xboxController.setRumble(rumbleType, rumbleStrength);
+      }
+    ).andThen(wait).andThen(stopRumble);
     // Setup codriver's controlls
   }
 
