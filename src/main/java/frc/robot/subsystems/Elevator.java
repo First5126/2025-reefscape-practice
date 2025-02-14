@@ -4,16 +4,14 @@
 
 package frc.robot.subsystems;
 
-import static edu.wpi.first.units.Units.Revolutions;
-
 import java.util.function.Supplier;
 
-import com.ctre.phoenix6.configs.HardwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANdi;
@@ -23,15 +21,11 @@ import com.ctre.phoenix6.signals.ForwardLimitSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.ReverseLimitSourceValue;
-import com.ctre.phoenix6.signals.ReverseLimitTypeValue;
 
-import edu.wpi.first.units.AngleUnit;
-import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.CANConstants;
-import frc.robot.constants.ClimbingConstants;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.ElevatorConstants.CoralLevels;
 
@@ -42,15 +36,14 @@ public class Elevator extends SubsystemBase {
 
   private final CANdi m_CANdi = new CANdi(CANConstants.ELEVATOR_CANDI);
   private final PositionVoltage m_PositionVoltage;
+ // private final MotionMagicVoltage m_moitonMagicVoltage;
   private final VoltageOut m_VoltageOut = new VoltageOut(0);  
   private final Slot0Configs m_slot0Configs = new Slot0Configs();
 
   // These fields are for when the driver taps up or down on the dpad. The elvator will go up or down a whole coral level
   private int m_goalHeightIndex = 0;
 
-  public Elevator() {
-    m_leftMotor.setPosition(0);
-    
+  public Elevator() {    
     TalonFXConfiguration leftConfig = new TalonFXConfiguration();
     TalonFXConfiguration rightConfig = new TalonFXConfiguration();
     
@@ -69,7 +62,11 @@ public class Elevator extends SubsystemBase {
 
     leftConfig.Slot0 = m_slot0Configs;
     m_PositionVoltage = new PositionVoltage(0).withSlot(0).withFeedForward(0);
-    
+    //m_moitonMagicVoltage = new MotionMagicVoltage(0.0).withSlot(0).withFeedForward(0);
+    leftConfig.MotionMagic.MotionMagicCruiseVelocity = 0.6;
+    leftConfig.MotionMagic.MotionMagicAcceleration = 0.2;
+    leftConfig.MotionMagic.MotionMagicJerk = 2;
+
     leftConfig.HardwareLimitSwitch.ForwardLimitSource = ForwardLimitSourceValue.RemoteCANdiS1;
     leftConfig.HardwareLimitSwitch.ForwardLimitRemoteSensorID = m_CANdi.getDeviceID();
 
@@ -114,26 +111,23 @@ public class Elevator extends SubsystemBase {
     if (m_goalHeightIndex<0) m_goalHeightIndex = 0;
     if (m_goalHeightIndex>CoralLevels.values().length-1) m_goalHeightIndex = CoralLevels.values().length-1;
     setPosition(CoralLevels.values()[m_goalHeightIndex]);
+    System.out.println(m_goalHeightIndex);
   }
 
   public Command lowerElevator() {
-    return run(() -> {
+    return runOnce(() -> {
       changeGoalHeightIndex(-1);
-    })
-    .until(this::getIsAtPosition)
-    .andThen(stopMotors());
+    });
   }
 
   public Command raiseElevator() {
-    return run(() -> {
+    return runOnce(() -> {
       changeGoalHeightIndex(1);
-    })
-    .until(this::getIsAtPosition)
-    .andThen(stopMotors());
+    });
   }
 
   private boolean getIsAtPosition() {
-    return m_leftMotor.getPosition().getValue() == CoralLevels.values()[m_goalHeightIndex].heightAngle;
+    return m_leftMotor.getPosition().getValue().isNear(ElevatorConstants.CoralLevels.values()[m_goalHeightIndex].heightAngle, ElevatorConstants.ELEVATOR_READING_STDV);
   }
 
   //using exesting mPositionVoltage write set position method in meters
@@ -142,7 +136,7 @@ public class Elevator extends SubsystemBase {
   }
 
   public Command goToCoralHeightPosition(CoralLevels position) {
-    return run(
+    return runOnce(
         ()-> {
           setPosition(position);
         });
@@ -157,7 +151,7 @@ public class Elevator extends SubsystemBase {
   public Command moveMotor(Supplier<Double> power) {
     return run (
       () -> {
-        setControl(new DutyCycleOut(power.get()*-0.5));
+        setControl(new DutyCycleOut(power.get()*-0.1));
       });
   }
 }

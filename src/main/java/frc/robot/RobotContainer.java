@@ -7,19 +7,15 @@ package frc.robot;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
-import static edu.wpi.first.units.Units.Seconds;
 
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.AutoBuilder;
 
-import edu.wpi.first.units.measure.Time;
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.event.BooleanEvent;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.constants.AprilTagLocalizationConstants;
 import frc.robot.generated.TunerConstants;
@@ -31,7 +27,6 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.LedLights;
 import frc.robot.subsystems.AlgaePivot;
 import frc.robot.subsystems.AlgaeRollers;
-import frc.robot.subsystems.AprilTagRecognition;
 import frc.robot.subsystems.Climbing;
 import frc.robot.subsystems.CommandFactory;
 import frc.robot.vision.AprilTagLocalization;
@@ -41,7 +36,7 @@ import frc.robot.subsystems.CommandFactory;
 public class RobotContainer {
   private final CommandXboxController m_driverController = new CommandXboxController(0);
 
-  /*private final CommandSwerveDrivetrain m_drivetrain = TunerConstants.DriveTrain;
+  private final CommandSwerveDrivetrain m_drivetrain = TunerConstants.DriveTrain;
   private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
   private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
@@ -66,15 +61,14 @@ public class RobotContainer {
 
       
   private final LedLights m_ledLights = new LedLights();
+  private final Elevator m_elevator = new Elevator();
   private final Climbing m_climbing = new Climbing();
   private final AlgaeRollers m_algaeRollers = new AlgaeRollers();
-  private final CoralRollers m_coralRollers = new CoralRollers(); 
-  private final CoralPivot m_coralPivot = new CoralPivot(); 
-  private final AlgaePivot m_algaePivot = new AlgaePivot(); 
+  private final CoralRollers m_coralRollers = new CoralRollers();
+  private final CoralPivot m_coralPivot = new CoralPivot();
+  private final AlgaePivot m_algaePivot = new AlgaePivot();
   private final SendableChooser<Command> autoChooser = AutoBuilder.buildAutoChooser();
   private final CommandFactory m_commandFactory = new CommandFactory(m_drivetrain, m_algaeRollers, m_climbing, m_elevator, m_coralRollers, m_ledLights, m_coralPivot, m_algaePivot); 
-  private final AprilTagRecognition m_aprilTagRecognition = new AprilTagRecognition(m_commandFactory);*/
-  private final Elevator m_elevator = new Elevator();
 
 
   public RobotContainer() {
@@ -82,56 +76,36 @@ public class RobotContainer {
     configureCoDriverControls();
 
       // Adds a auto chooser to Shuffle Board to choose autos
-    //SmartDashboard.putData("Auto Chooser", autoChooser);
+    SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
   private boolean yNotPressed() {
-    return !m_driverController.y().getAsBoolean();
+    return m_driverController.y().getAsBoolean();
   }
 
   private void configureBindings() {
     // Note that X is defined as forward according to WPILib convention,
     // and Y is defined as to the left according to WPILib convention.    
     
-    /*m_drivetrain.setDefaultCommand(m_drivetrain.gasPedalCommand(
+    m_drivetrain.setDefaultCommand(m_drivetrain.gasPedalCommand(
         m_driverController::getRightTriggerAxis,
         m_driverController::getRightX,
         m_driverController::getLeftY,
         m_driverController::getLeftX
-    ));*/
+    ));
 
-    m_driverController.povUp().and(this::yNotPressed).toggleOnTrue(m_elevator.raiseElevator());
-    m_driverController.povDown().and(this::yNotPressed).toggleOnTrue(m_elevator.lowerElevator());
+    m_driverController.povUp().and(this::yNotPressed).onTrue(m_elevator.raiseElevator());
+    m_driverController.povDown().and(this::yNotPressed).onTrue(m_elevator.lowerElevator());
     
-    m_elevator.setDefaultCommand(m_elevator.moveMotor(m_driverController::getLeftY));
-    //logger.telemeterize(m_drivetrain.getState());
-
-    //m_driverController.x().whileTrue(m_aprilTagRecognition.getAprilTagCommand());
+    logger.telemeterize(m_drivetrain.getState());
   }
     
   private void configureCoDriverControls() {
-    // Setup codriver's controlls
-    /*m_coDriverController.a().whileTrue(m_coralRollers.rollInCommand()).onFalse(m_coralRollers.stopCommand());
-    m_coDriverController.b().whileTrue(m_coralRollers.rollInCommand()).onFalse(m_coralRollers.stopCommand());
-    m_coralRollers.getCoralTrigger().onTrue(rumbleCommand(m_coDriverController, RumbleType.kBothRumble, 1.0, Seconds.of(0.5)));*/
-  }
 
-  private Command rumbleCommand(CommandXboxController xboxController, RumbleType rumbleType, double rumbleStrength, Time rumbleTime) {
-    Command wait = Commands.waitTime(rumbleTime);
-    Command stopRumble = Commands.runOnce(
-      () -> {xboxController.setRumble(rumbleType, 0.0);}
-    );
-
-    return Commands.runOnce(
-      () -> {
-        xboxController.setRumble(rumbleType, rumbleStrength);
-      }
-    ).andThen(wait).andThen(stopRumble);
     // Setup codriver's controlls
   }
 
   public Command getAutonomousCommand() {
-    //return autoChooser.getSelected();
-    return null;
+    return autoChooser.getSelected();
   }
 }

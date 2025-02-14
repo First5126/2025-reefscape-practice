@@ -28,7 +28,7 @@ public class ElevatorConstants {
     public static final double ELEVATOR_MIN_HEIGHT = 0.0; // in meters
     public static final double ELEVATOR_TOLERANCE = 0.01; // in meters  
     
-    public static final double kP = 0.6;
+    public static final double kP = 60;
     public static final double kI = 0;
     public static final double kD = 0;
     public static final double kV = 0;
@@ -39,4 +39,6 @@ public class ElevatorConstants {
     public static final int REVERSE_DIGITAL_LIMIT = 0;
 
     public static final double GEAR_RATIO = 12.0;
+
+    public static final Angle ELEVATOR_READING_STDV = Revolutions.of(0.05);
 }
