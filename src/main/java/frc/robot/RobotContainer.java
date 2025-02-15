@@ -108,6 +108,8 @@ public class RobotContainer {
 
     m_driverController.povUp().and(this::yPressed).onTrue(m_elevator.moveMotorUp());
     m_driverController.povDown().and(this::yPressed).onTrue(m_elevator.moveMotorDown());
+
+    m_driverController.povUp().and(this::yPressed).and(m_driverController.povDown()).onFalse(m_elevator.TrimHold());
     
     //logger.telemeterize(m_drivetrain.getState());
 
