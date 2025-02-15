@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import java.util.function.Supplier;
 
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.ControlRequest;
@@ -19,6 +20,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.ForwardLimitSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.MotorOutputStatusValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.ReverseLimitSourceValue;
 
@@ -35,7 +37,6 @@ public class Elevator extends SubsystemBase {
   private final TalonFX m_rightMotor = new TalonFX(CANConstants.RIGHT_ELAVOTAR_MOTOR);
 
   private final CANdi m_CANdi = new CANdi(CANConstants.ELEVATOR_CANDI);
-  //private final PositionVoltage m_PositionVoltage;
   private final MotionMagicVoltage m_moitonMagicVoltage;
   private final VoltageOut m_VoltageOut = new VoltageOut(0);  
   private final Slot0Configs m_slot0Configs = new Slot0Configs();
@@ -61,11 +62,10 @@ public class Elevator extends SubsystemBase {
     m_slot0Configs.kS = ElevatorConstants.kS;
 
     leftConfig.Slot0 = m_slot0Configs;
-    //m_PositionVoltage = new PositionVoltage(0).withSlot(0).withFeedForward(0);
     m_moitonMagicVoltage = new MotionMagicVoltage(0.0).withSlot(0);
-    leftConfig.MotionMagic.MotionMagicCruiseVelocity = 30;
-    leftConfig.MotionMagic.MotionMagicAcceleration = 60;
-    leftConfig.MotionMagic.MotionMagicJerk = 0;
+    leftConfig.MotionMagic.MotionMagicCruiseVelocity = 40;
+    leftConfig.MotionMagic.MotionMagicAcceleration = 80;
+    leftConfig.MotionMagic.MotionMagicJerk = 400;
 
     leftConfig.HardwareLimitSwitch.ForwardLimitSource = ForwardLimitSourceValue.RemoteCANdiS1;
     leftConfig.HardwareLimitSwitch.ForwardLimitRemoteSensorID = m_CANdi.getDeviceID();
@@ -125,6 +125,18 @@ public class Elevator extends SubsystemBase {
     });
   }
 
+  public Command goToTop() {
+    return runOnce(() -> {
+      changeGoalHeightIndex(5);
+    });
+  }
+
+  public Command goToBottom() {
+    return runOnce(() -> {
+      changeGoalHeightIndex(-5);
+    });
+  }
+
   private boolean getIsAtPosition() {
     return m_leftMotor.getPosition().getValue().isNear(ElevatorConstants.CoralLevels.values()[m_goalHeightIndex].heightAngle, ElevatorConstants.ELEVATOR_READING_STDV);
   }
@@ -151,6 +163,28 @@ public class Elevator extends SubsystemBase {
     return run (
       () -> {
         setControl(new DutyCycleOut(power.get()*-0.1));
+      });
+  }
+
+  public Command unBrake() {
+    return run (
+      () -> {
+        MotorOutputConfigs unbrake = new MotorOutputConfigs();
+        unbrake.NeutralMode = NeutralModeValue.Coast;
+
+        m_leftMotor.getConfigurator().apply(unbrake);
+        m_rightMotor.getConfigurator().apply(unbrake);
+      });
+  }
+
+  public Command brake() {
+    return run (
+      () -> {
+        MotorOutputConfigs brake = new MotorOutputConfigs();
+        brake.NeutralMode = NeutralModeValue.Brake;
+
+        m_leftMotor.getConfigurator().apply(brake);
+        m_rightMotor.getConfigurator().apply(brake);
       });
   }
 }
