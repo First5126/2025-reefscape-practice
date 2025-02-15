@@ -7,50 +7,40 @@ package frc.robot;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
-import static edu.wpi.first.units.Units.Seconds;
 
-import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.units.measure.Time;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
-import edu.wpi.first.wpilibj.event.BooleanEvent;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.constants.AprilTagLocalizationConstants;
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.CoralPivot;
-import frc.robot.subsystems.CoralRollers;
-import frc.robot.subsystems.Elevator;
-
-import frc.robot.subsystems.LedLights;
 import frc.robot.subsystems.AlgaePivot;
 import frc.robot.subsystems.AlgaeRollers;
 import frc.robot.subsystems.AprilTagRecognition;
 import frc.robot.subsystems.Climbing;
 import frc.robot.subsystems.CommandFactory;
-import frc.robot.vision.AprilTagLocalization;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.CoralPivot;
+import frc.robot.subsystems.CoralRollers;
+import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.LedLights;
-import frc.robot.subsystems.CommandFactory;
+import frc.robot.vision.AprilTagLocalization;
 
 public class RobotContainer {
   private final CommandXboxController m_driverController = new CommandXboxController(0);
-  /*
   private final CommandSwerveDrivetrain m_drivetrain = TunerConstants.DriveTrain;
   private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
   private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
   // Setting up bindings for necessary control of the swerve drive platform
-  private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-          .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
-          .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
-  private final SwerveRequest.RobotCentric driveRobCentric = new SwerveRequest.RobotCentric()
-          .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
+  private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric().withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1); // Add a 10% deadband.withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
+  private final SwerveRequest.RobotCentric driveRobCentric = new SwerveRequest.RobotCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
   private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
   private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
   private final CommandXboxController m_coDriverController = new CommandXboxController(1);
@@ -65,16 +55,16 @@ public class RobotContainer {
   );
 
       
-  /*private final LedLights m_ledLights = new LedLights();
+  private final LedLights m_ledLights = new LedLights();
   private final Climbing m_climbing = new Climbing();
   private final AlgaeRollers m_algaeRollers = new AlgaeRollers();
   private final CoralRollers m_coralRollers = new CoralRollers();
   private final CoralPivot m_coralPivot = new CoralPivot();
   private final AlgaePivot m_algaePivot = new AlgaePivot();
-  private final SendableChooser<Command> autoChooser = AutoBuilder.buildAutoChooser();*/
+  private final SendableChooser<Command> autoChooser = AutoBuilder.buildAutoChooser();
   private final Elevator m_elevator = new Elevator();
-  //private final CommandFactory m_commandFactory = new CommandFactory(m_drivetrain, m_algaeRollers, m_climbing, m_elevator, m_coralRollers, m_ledLights, m_coralPivot, m_algaePivot); 
-  //private final AprilTagRecognition m_aprilTagRecognition = new AprilTagRecognition(m_commandFactory);
+  private final CommandFactory m_commandFactory = new CommandFactory(m_drivetrain, m_algaeRollers, m_climbing, m_elevator, m_coralRollers, m_ledLights, m_coralPivot, m_algaePivot); 
+  private final AprilTagRecognition m_aprilTagRecognition = new AprilTagRecognition(m_commandFactory);
 
   public RobotContainer() {
     configureBindings();
@@ -83,6 +73,8 @@ public class RobotContainer {
       // Adds a auto chooser to Shuffle Board to choose autos
     //SmartDashboard.putData("Auto Chooser", autoChooser);
   }
+
+  
 
   private boolean yNotPressed() {
     return !m_driverController.y().getAsBoolean();

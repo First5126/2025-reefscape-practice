@@ -6,7 +6,6 @@ import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -87,4 +86,11 @@ public class CommandFactory {
   public Command goToPose(Pose2d pose) {
     return m_drivetrain.goToPose(pose);
   }
+
+  public Command followPathWithPostAction(Command pathCommand, Command postAction) {
+    m_coralRollers.placeCoral();
+    return pathCommand.andThen(postAction);
+
+  }
 }
+
