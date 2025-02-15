@@ -27,6 +27,7 @@ import com.ctre.phoenix6.signals.ReverseLimitSourceValue;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import frc.robot.constants.CANConstants;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.ElevatorConstants.CoralLevels;
@@ -116,29 +117,25 @@ public class Elevator extends SubsystemBase {
   public Command lowerElevator() {
     return runOnce(() -> {
       changeGoalHeightIndex(-1);
-    });
+    }).withInterruptBehavior(InterruptionBehavior.kCancelSelf);
   }
 
   public Command raiseElevator() {
     return runOnce(() -> {
       changeGoalHeightIndex(1);
-    });
+    }).withInterruptBehavior(InterruptionBehavior.kCancelSelf);
   }
 
   public Command goToTop() {
     return runOnce(() -> {
       changeGoalHeightIndex(5);
-    });
+    }).withInterruptBehavior(InterruptionBehavior.kCancelSelf);
   }
 
   public Command goToBottom() {
     return runOnce(() -> {
       changeGoalHeightIndex(-5);
-    });
-  }
-
-  private boolean getIsAtPosition() {
-    return m_leftMotor.getPosition().getValue().isNear(ElevatorConstants.CoralLevels.values()[m_goalHeightIndex].heightAngle, ElevatorConstants.ELEVATOR_READING_STDV);
+    }).withInterruptBehavior(InterruptionBehavior.kCancelSelf);
   }
 
   //using exesting mPositionVoltage write set position method in meters
@@ -159,10 +156,17 @@ public class Elevator extends SubsystemBase {
       ));
   }
 
-  public Command moveMotor(Supplier<Double> power) {
+  public Command moveMotorUp() {
     return run (
       () -> {
-        setControl(new DutyCycleOut(power.get()*-0.1));
+        setControl(new DutyCycleOut(ElevatorConstants.MANUAL_SPEED));
+      });
+  }
+
+  public Command moveMotorDown() {
+    return run (
+      () -> {
+        setControl(new DutyCycleOut(-ElevatorConstants.MANUAL_SPEED));
       });
   }
 
