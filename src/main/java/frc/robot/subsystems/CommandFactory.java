@@ -60,7 +60,7 @@ public class CommandFactory {
   }
 
   public Command driveAndPlaceCoral(Pose reefPose, CoralLevels level) {
-    Command raiseElevator = m_elevator.setPosition(level);
+    Command raiseElevator = m_elevator.goToCoralHeightPosition(level);
     Command driveToReef = moveToPositionWithDistance(reefPose.getPose(), level.distance, raiseElevator);
     Command placeCoral = m_coralRollers.rollOutCommand();
     Command returnCommand = driveToReef.andThen(placeCoral);
