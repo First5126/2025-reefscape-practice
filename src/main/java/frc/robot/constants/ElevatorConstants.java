@@ -28,15 +28,20 @@ public class ElevatorConstants {
     public static final double ELEVATOR_MIN_HEIGHT = 0.0; // in meters
     public static final double ELEVATOR_TOLERANCE = 0.01; // in meters  
     
-    public static final double kP = 0.6;
+    public static final double kS = 0.25;
+    public static final double kV = 0.12;
+    public static final double kA = 0.01;
+    public static final double kP = 4.8;
     public static final double kI = 0;
-    public static final double kD = 0;
-    public static final double kV = 0;
-    public static final double kS = 0;
-    public static final double kG = 0;
+    public static final double kD = 0.1;
 
     public static final int FORWARD_DIGITAL_LIMIT = 0;
     public static final int REVERSE_DIGITAL_LIMIT = 0;
 
     public static final double GEAR_RATIO = 12.0;
+
+    public static final double MotionMagicCruiseVelocity = 0.25; // Target cruise velocity of 80 rps
+    public static final double MotionMagicAcceleration = 1; // Target acceleration of 160 rps/s (0.5 seconds)
+    public static final double MotionMagicJerk = 1; // Target jerk of 1600 rps/s/s (0.1 seconds)
+    public static final double MotionMagicMaxVelocity = 0.25; // Target max velocity of 80 rps
 }

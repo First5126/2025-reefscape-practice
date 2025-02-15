@@ -52,11 +52,12 @@ public class Elevator extends SubsystemBase {
     leftConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     leftConfig.Feedback.SensorToMechanismRatio = ElevatorConstants.GEAR_RATIO;
     leftConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
-    
+
+  
     m_slot0Configs.kP = ElevatorConstants.kP;
     m_slot0Configs.kI = ElevatorConstants.kI;
     m_slot0Configs.kD = ElevatorConstants.kD;
-    m_slot0Configs.kG = ElevatorConstants.kG;
+    m_slot0Configs.kA = ElevatorConstants.kA;
     m_slot0Configs.kV = ElevatorConstants.kV;
     m_slot0Configs.kS = ElevatorConstants.kS;
 
