@@ -10,8 +10,6 @@ import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.CANrange;
 import com.ctre.phoenix6.hardware.TalonFXS;
 
-import edu.wpi.first.wpilibj.CAN;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -90,5 +88,13 @@ public class CoralRollers extends SubsystemBase {
                 () -> {
                     stop();
                 });
+    }
+
+
+    public Command placeCoral() {
+        return runOnce(
+            () -> { 
+                rollOutCommand();
+            });
     }
 } 

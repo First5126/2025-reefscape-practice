@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Rotations;
+
 import java.util.function.Supplier;
 
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
@@ -13,21 +15,19 @@ import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
-import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANdi;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.ForwardLimitSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
-import com.ctre.phoenix6.signals.MotorOutputStatusValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.ReverseLimitSourceValue;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.CANConstants;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.ElevatorConstants.CoralLevels;
@@ -107,6 +107,29 @@ public class Elevator extends SubsystemBase {
   }
 
   private void changeGoalHeightIndex(int change) {
+    double position = m_leftMotor.getPosition().getValueAsDouble();
+    if (position == CoralLevels.L1.heightAngle.in(Rotations)) {
+      m_goalHeightIndex = 0;
+    }
+    else if (position == CoralLevels.L2.heightAngle.in(Rotations)) {
+      m_goalHeightIndex = 1;
+    }
+    else if (position == CoralLevels.L3.heightAngle.in(Rotations)) {
+      m_goalHeightIndex = 2;
+    }
+    else if (position == CoralLevels.L4.heightAngle.in(Rotations)) {
+      m_goalHeightIndex = 3;
+    }
+    else if (position < CoralLevels.L2.heightAngle.in(Rotations)-ElevatorConstants.heightTolerance) {
+      m_goalHeightIndex = 0;
+    }
+    else if (position < CoralLevels.L3.heightAngle.in(Rotations)-ElevatorConstants.heightTolerance) {
+      m_goalHeightIndex = 1;
+    }
+    else if (position < CoralLevels.L4.heightAngle.in(Rotations)-ElevatorConstants.heightTolerance) {
+      m_goalHeightIndex = 2;
+    }
+
     m_goalHeightIndex += change;
 
     if (m_goalHeightIndex<0) m_goalHeightIndex = 0;
@@ -191,4 +214,16 @@ public class Elevator extends SubsystemBase {
         m_rightMotor.getConfigurator().apply(brake);
       });
   }
+
+  public Command TrimHold() {
+    return run(
+      () -> {
+        double position = m_leftMotor.getPosition().getValueAsDouble();
+        setControl(m_moitonMagicVoltage.withPosition(position));
+      }
+    );
+  }
+
+  
+
 }

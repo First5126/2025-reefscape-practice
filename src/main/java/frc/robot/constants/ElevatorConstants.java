@@ -41,4 +41,6 @@ public class ElevatorConstants {
     public static final double GEAR_RATIO = 12.0;
 
     public static final double MANUAL_SPEED = 0.1;
+
+    public static final double heightTolerance = 0.1;
 }

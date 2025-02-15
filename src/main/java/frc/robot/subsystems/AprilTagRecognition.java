@@ -2,20 +2,12 @@ package frc.robot.subsystems;
 
 import java.util.HashMap;
 
-import com.ctre.phoenix6.controls.Follower;
-import com.ctre.phoenix6.controls.VelocityVoltage;
-import com.ctre.phoenix6.hardware.TalonFX;
-
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.constants.AlgaeConstants;
 import frc.robot.constants.AprilTagLocalizationConstants;
 import frc.robot.constants.ApriltagConstants;
-import frc.robot.constants.CANConstants;
-import frc.robot.constants.ClimbingConstants;
 import frc.robot.constants.PoseConstants;
 import frc.robot.vision.LimelightHelpers;
 import frc.robot.vision.LimelightHelpers.RawFiducial;
