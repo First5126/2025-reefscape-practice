@@ -35,14 +35,14 @@ public class Elevator extends SubsystemBase {
   private final TalonFX m_rightMotor = new TalonFX(CANConstants.RIGHT_ELAVOTAR_MOTOR);
 
   private final CANdi m_CANdi = new CANdi(CANConstants.ELEVATOR_CANDI);
-  private final PositionVoltage m_PositionVoltage;
- // private final MotionMagicVoltage m_moitonMagicVoltage;
+  //private final PositionVoltage m_PositionVoltage;
+  private final MotionMagicVoltage m_moitonMagicVoltage;
   private final VoltageOut m_VoltageOut = new VoltageOut(0);  
   private final Slot0Configs m_slot0Configs = new Slot0Configs();
 
   // These fields are for when the driver taps up or down on the dpad. The elvator will go up or down a whole coral level
   private int m_goalHeightIndex = 0;
-
+  
   public Elevator() {    
     TalonFXConfiguration leftConfig = new TalonFXConfiguration();
     TalonFXConfiguration rightConfig = new TalonFXConfiguration();
@@ -61,11 +61,11 @@ public class Elevator extends SubsystemBase {
     m_slot0Configs.kS = ElevatorConstants.kS;
 
     leftConfig.Slot0 = m_slot0Configs;
-    m_PositionVoltage = new PositionVoltage(0).withSlot(0).withFeedForward(0);
-    //m_moitonMagicVoltage = new MotionMagicVoltage(0.0).withSlot(0).withFeedForward(0);
-    leftConfig.MotionMagic.MotionMagicCruiseVelocity = 0.6;
-    leftConfig.MotionMagic.MotionMagicAcceleration = 0.2;
-    leftConfig.MotionMagic.MotionMagicJerk = 2;
+    //m_PositionVoltage = new PositionVoltage(0).withSlot(0).withFeedForward(0);
+    m_moitonMagicVoltage = new MotionMagicVoltage(0.0).withSlot(0);
+    leftConfig.MotionMagic.MotionMagicCruiseVelocity = 30;
+    leftConfig.MotionMagic.MotionMagicAcceleration = 60;
+    leftConfig.MotionMagic.MotionMagicJerk = 0;
 
     leftConfig.HardwareLimitSwitch.ForwardLimitSource = ForwardLimitSourceValue.RemoteCANdiS1;
     leftConfig.HardwareLimitSwitch.ForwardLimitRemoteSensorID = m_CANdi.getDeviceID();
@@ -131,7 +131,7 @@ public class Elevator extends SubsystemBase {
 
   //using exesting mPositionVoltage write set position method in meters
   private void setPosition(CoralLevels position){
-    m_leftMotor.setControl(m_PositionVoltage.withPosition(position.heightAngle));
+    m_leftMotor.setControl(m_moitonMagicVoltage.withPosition(position.heightAngle));
   }
 
   public Command goToCoralHeightPosition(CoralLevels position) {
