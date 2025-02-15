@@ -40,5 +40,5 @@ public class ElevatorConstants {
 
     public static final double GEAR_RATIO = 12.0;
 
-    public static final Angle ELEVATOR_READING_STDV = Revolutions.of(0.05);
+    public static final double MANUAL_SPEED = 0.1;
 }
