@@ -7,15 +7,19 @@ package frc.robot;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
+import static edu.wpi.first.units.Units.Seconds;
 
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.AutoBuilder;
 
+import edu.wpi.first.units.measure.Time;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.event.BooleanEvent;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.constants.AprilTagLocalizationConstants;
 import frc.robot.generated.TunerConstants;
@@ -27,6 +31,7 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.LedLights;
 import frc.robot.subsystems.AlgaePivot;
 import frc.robot.subsystems.AlgaeRollers;
+import frc.robot.subsystems.AprilTagRecognition;
 import frc.robot.subsystems.Climbing;
 import frc.robot.subsystems.CommandFactory;
 import frc.robot.vision.AprilTagLocalization;
@@ -69,7 +74,7 @@ public class RobotContainer {
   private final SendableChooser<Command> autoChooser = AutoBuilder.buildAutoChooser();
   private final Elevator m_elevator = new Elevator();
   private final CommandFactory m_commandFactory = new CommandFactory(m_drivetrain, m_algaeRollers, m_climbing, m_elevator, m_coralRollers, m_ledLights, m_coralPivot, m_algaePivot); 
-
+  private final AprilTagRecognition m_aprilTagRecognition = new AprilTagRecognition(m_commandFactory);
 
   public RobotContainer() {
     configureBindings();
@@ -101,8 +106,23 @@ public class RobotContainer {
   }
     
   private void configureCoDriverControls() {
-
     // Setup codriver's controlls
+    m_coDriverController.a().whileTrue(m_coralRollers.rollInCommand()).onFalse(m_coralRollers.stopCommand());
+    m_coDriverController.b().whileTrue(m_coralRollers.rollInCommand()).onFalse(m_coralRollers.stopCommand());
+    m_coralRollers.getCoralTrigger().onTrue(rumbleCommand(m_coDriverController, RumbleType.kBothRumble, 1.0, Seconds.of(0.5)));
+  }
+
+  private Command rumbleCommand(CommandXboxController xboxController, RumbleType rumbleType, double rumbleStrength, Time rumbleTime) {
+    Command wait = Commands.waitTime(rumbleTime);
+    Command stopRumble = Commands.runOnce(
+      () -> {xboxController.setRumble(rumbleType, 0.0);}
+    );
+    
+    return Commands.runOnce(
+      () -> {
+        xboxController.setRumble(rumbleType, rumbleStrength);
+      }
+    ).andThen(wait).andThen(stopRumble);
   }
 
   public Command getAutonomousCommand() {
