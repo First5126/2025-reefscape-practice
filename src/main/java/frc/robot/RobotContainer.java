@@ -98,11 +98,28 @@ public class RobotContainer {
     m_driverController.povDown().and(this::yNotPressed).onTrue(m_elevator.lowerElevator());
     
     logger.telemeterize(m_drivetrain.getState());
+    
+    m_driverController.x().whileTrue(m_aprilTagRecognition.getAprilTagCommand());
   }
     
   private void configureCoDriverControls() {
-
     // Setup codriver's controlls
+    m_coDriverController.a().whileTrue(m_coralRollers.rollInCommand()).onFalse(m_coralRollers.stopCommand());
+    m_coDriverController.b().whileTrue(m_coralRollers.rollInCommand()).onFalse(m_coralRollers.stopCommand());
+    m_coralRollers.getCoralTrigger().onTrue(rumbleCommand(m_coDriverController, RumbleType.kBothRumble, 1.0, Seconds.of(0.5)));
+  }
+
+  private Command rumbleCommand(CommandXboxController xboxController, RumbleType rumbleType, double rumbleStrength, Time rumbleTime) {
+    Command wait = Commands.waitTime(rumbleTime);
+    Command stopRumble = Commands.runOnce(
+      () -> {xboxController.setRumble(rumbleType, 0.0);}
+    );
+    
+    return Commands.runOnce(
+      () -> {
+        xboxController.setRumble(rumbleType, rumbleStrength);
+      }
+    ).andThen(wait).andThen(stopRumble);
   }
 
   public Command getAutonomousCommand() {
