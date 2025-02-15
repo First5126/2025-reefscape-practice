@@ -85,7 +85,7 @@ public class RobotContainer {
   }
 
   private boolean yNotPressed() {
-    return m_driverController.y().getAsBoolean();
+    return !m_driverController.y().getAsBoolean();
   }
 
   private void configureBindings() {
