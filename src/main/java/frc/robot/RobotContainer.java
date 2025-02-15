@@ -103,6 +103,8 @@ public class RobotContainer {
     m_driverController.povDown().and(this::yNotPressed).onTrue(m_elevator.lowerElevator());
     
     logger.telemeterize(m_drivetrain.getState());
+
+    m_driverController.x().whileTrue(m_aprilTagRecognition.getAprilTagCommand());
   }
     
   private void configureCoDriverControls() {
