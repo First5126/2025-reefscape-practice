@@ -41,7 +41,7 @@ import frc.robot.subsystems.CommandFactory;
 public class RobotContainer {
   private final CommandXboxController m_driverController = new CommandXboxController(0);
 
-  /*private final CommandSwerveDrivetrain m_drivetrain = TunerConstants.DriveTrain;
+  private final CommandSwerveDrivetrain m_drivetrain = TunerConstants.DriveTrain;
   private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
   private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
@@ -68,13 +68,13 @@ public class RobotContainer {
   private final LedLights m_ledLights = new LedLights();
   private final Climbing m_climbing = new Climbing();
   private final AlgaeRollers m_algaeRollers = new AlgaeRollers();
-  private final CoralRollers m_coralRollers = new CoralRollers();*/
+  private final CoralRollers m_coralRollers = new CoralRollers();
   private final CoralPivot m_coralPivot = new CoralPivot();
-  //private final AlgaePivot m_algaePivot = new AlgaePivot();
-  /*private final SendableChooser<Command> autoChooser = AutoBuilder.buildAutoChooser();
+  private final AlgaePivot m_algaePivot = new AlgaePivot();
+  private final SendableChooser<Command> autoChooser = AutoBuilder.buildAutoChooser();
   private final Elevator m_elevator = new Elevator();
   private final CommandFactory m_commandFactory = new CommandFactory(m_drivetrain, m_algaeRollers, m_climbing, m_elevator, m_coralRollers, m_ledLights, m_coralPivot, m_algaePivot); 
-  private final AprilTagRecognition m_aprilTagRecognition = new AprilTagRecognition(m_commandFactory);*/
+  private final AprilTagRecognition m_aprilTagRecognition = new AprilTagRecognition(m_commandFactory);
 
   public RobotContainer() {
     configureBindings();
@@ -92,7 +92,7 @@ public class RobotContainer {
     // Note that X is defined as forward according to WPILib convention,
     // and Y is defined as to the left according to WPILib convention.    
     
-    /*m_drivetrain.setDefaultCommand(m_drivetrain.gasPedalCommand(
+    m_drivetrain.setDefaultCommand(m_drivetrain.gasPedalCommand(
         m_driverController::getRightTriggerAxis,
         m_driverController::getRightX,
         m_driverController::getLeftY,
@@ -104,16 +104,16 @@ public class RobotContainer {
     
     logger.telemeterize(m_drivetrain.getState());
 
-    m_driverController.x().whileTrue(m_aprilTagRecognition.getAprilTagCommand());*/
+    m_driverController.x().whileTrue(m_aprilTagRecognition.getAprilTagCommand());
     m_driverController.x().onTrue(m_coralPivot.goToLowerSetpoint());
     m_driverController.y().onTrue(m_coralPivot.goToUpperSetpoint());
   }
     
   private void configureCoDriverControls() {
     // Setup codriver's controlls
-    /*m_coDriverController.a().whileTrue(m_coralRollers.rollInCommand()).onFalse(m_coralRollers.stopCommand());
+    m_coDriverController.a().whileTrue(m_coralRollers.rollInCommand()).onFalse(m_coralRollers.stopCommand());
     m_coDriverController.b().whileTrue(m_coralRollers.rollInCommand()).onFalse(m_coralRollers.stopCommand());
-    m_coralRollers.getCoralTrigger().onTrue(rumbleCommand(m_coDriverController, RumbleType.kBothRumble, 1.0, Seconds.of(0.5)));*/
+    m_coralRollers.getCoralTrigger().onTrue(rumbleCommand(m_coDriverController, RumbleType.kBothRumble, 1.0, Seconds.of(0.5)));
   }
 
   private Command rumbleCommand(CommandXboxController xboxController, RumbleType rumbleType, double rumbleStrength, Time rumbleTime) {
