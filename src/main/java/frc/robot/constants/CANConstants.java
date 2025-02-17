@@ -20,6 +20,8 @@ public class CANConstants {
   public static final int LEFT_ELAVOTAR_MOTOR = 2;
 
   public static final int CORAL_PIVOT = 0;
+  public static final int CORAL_PIVOT_CANCODER = 1;
+
   public static final int ALGAE_PIVOT = 0;
 
   public static final int LEFT_CAN_RANGE_CORAL = 1;
