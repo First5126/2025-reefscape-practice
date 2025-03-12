@@ -81,7 +81,7 @@ public class RobotContainer {
     configureCoDriverControls();
 
       // Adds a auto chooser to Shuffle Board to choose autos
-    SmartDashboard.putData("Auto Chooser", autoChooser);
+    //SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
   private boolean yNotPressed() {
@@ -105,6 +105,8 @@ public class RobotContainer {
     logger.telemeterize(m_drivetrain.getState());
 
     m_driverController.x().whileTrue(m_aprilTagRecognition.getAprilTagCommand());
+    m_driverController.x().onTrue(m_coralPivot.goToLowerSetpoint());
+    m_driverController.y().onTrue(m_coralPivot.goToUpperSetpoint());
   }
     
   private void configureCoDriverControls() {
@@ -128,6 +130,7 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return autoChooser.getSelected();
+    //return autoChooser.getSelected();
+    return null;
   }
 }
